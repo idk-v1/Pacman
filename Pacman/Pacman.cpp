@@ -3,39 +3,62 @@
 Pacman::Pacman()
 {
 	rect.setFillColor(sf::Color(0xFFFF00FF));
-
-	for (int i = 0; i < 4; i++)
-		col[i].setFillColor(sf::Color(0xFFFFFF3F));
 }
 
 void Pacman::move(char map[31][28], sf::Vector2i size)
 {
-	sf::Vector2f oldPos = pos;
-	dir = nextDir;
-
-	switch (dir)
+	// change direction if able
+	switch (nextDir)
 	{
 	case 0:
-		if (!getTile(map, pos.x, pos.y))
-			pos.y -= speed;
+		if (!getTile(map, pos.x, pos.y - speed) && !getTile(map, pos.x + 0.9, pos.y - speed))
+			dir = nextDir;
 		break;
 	case 1:
-		if (!getTile(map, pos.x + 0.99, pos.y))
-			pos.x += speed;
+		if (!getTile(map, pos.x + speed + 1, pos.y) && !getTile(map, pos.x + speed + 1, pos.y + 0.9))
+			dir = nextDir;
 		break;
 	case 2:
-		if (!getTile(map, pos.x, pos.y + 0.99))
-			pos.y += speed;
+		if (!getTile(map, pos.x, pos.y + speed + 1) && !getTile(map, pos.x + 0.9, pos.y + speed + 1))
+			dir = nextDir;
 		break;
 	case 3:
-		if (!getTile(map, pos.x, pos.y))
-			pos.x -= speed;
+		if (!getTile(map, pos.x - speed, pos.y) && !getTile(map, pos.x - speed, pos.y + 0.9))
+			dir = nextDir;
 	}
 
 	if (dir % 2)
 		pos.y = std::round(pos.y);
 	else
 		pos.x = std::round(pos.x);
+
+	// move if not colliding
+	switch (dir)
+	{
+	case 0:
+		if (!getTile(map, pos.x, pos.y - speed))
+			pos.y -= speed;
+		else
+			pos.y = std::round(pos.y);
+		break;
+	case 1:
+		if (!getTile(map, pos.x + 0.99 + speed, pos.y))
+			pos.x += speed;
+		else
+			pos.x = std::round(pos.x);
+		break;
+	case 2:
+		if (!getTile(map, pos.x, pos.y + 0.99 + speed))
+			pos.y += speed;
+		else
+			pos.y = std::round(pos.y);
+		break;
+	case 3:
+		if (!getTile(map, pos.x - speed, pos.y))
+			pos.x -= speed;
+		else
+			pos.x = std::round(pos.x);
+	}
 
 	if (pos.x < 0)
 		pos.x += size.x;
@@ -45,11 +68,6 @@ void Pacman::move(char map[31][28], sf::Vector2i size)
 		pos.x -= size.x;
 	if (pos.y >= size.y)
 		pos.y -= size.y;
-
-	for (int i = 0; i < 4; i++)
-	{
-		colPos[i] = sf::Vector2i(int(pos.x + 0.99 * (i % 2)), int(pos.y + 0.99 * (i / 2)));
-	}
 }
 
 void Pacman::draw(sf::RenderWindow &w, sf::Vector2i size)
@@ -59,16 +77,8 @@ void Pacman::draw(sf::RenderWindow &w, sf::Vector2i size)
 	float yoff = (w.getSize().y - size.y * minScale) / 2.f;
 
 	rect.setSize(sf::Vector2f(width * minScale, width * minScale));
-	//rect.setOrigin(minScale * 0.5, minScale * 0.5);
 	rect.setPosition(xoff + pos.x * minScale, yoff + pos.y * minScale);
 	w.draw(rect);
-
-	for (int i = 0; i < 4; i++)
-	{
-		col[i].setPosition(xoff + colPos[i].x * minScale, yoff + colPos[i].y * minScale);
-		col[i].setSize(sf::Vector2f(minScale, minScale));
-		w.draw(col[i]);
-	}
 }
 
 void Pacman::setDir(char newDir)
