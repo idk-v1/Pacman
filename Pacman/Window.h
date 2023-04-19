@@ -22,6 +22,10 @@ private:
 
 	int lag = 0;
 
+	int dir = -1;
+
+	bool keys[4] = { false };
+
 	Game game;
 };
 

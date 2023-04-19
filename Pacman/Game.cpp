@@ -41,22 +41,20 @@ void Game::drawMap(sf::RenderWindow& w)
 	for (int col = 0; col < size.y; col++)
 		for (int row = 0; row < size.x; row++)
 		{
-			vertMap[(row + col * size.x) * 4 + 0].position = sf::Vector2f(xoff + row * minScale,            yoff + col * minScale);
-			vertMap[(row + col * size.x) * 4 + 1].position = sf::Vector2f(xoff + row * minScale + minScale, yoff + col * minScale);
-			vertMap[(row + col * size.x) * 4 + 2].position = sf::Vector2f(xoff + row * minScale + minScale, yoff + col * minScale + minScale);
-			vertMap[(row + col * size.x) * 4 + 3].position = sf::Vector2f(xoff + row * minScale,            yoff + col * minScale + minScale);
+			vertMap[(row + col * size.x) * 4 + 0].position = sf::Vector2f((xoff + row + 0) * minScale, (yoff + col + 0) * minScale);
+			vertMap[(row + col * size.x) * 4 + 1].position = sf::Vector2f((xoff + row + 1) * minScale, (yoff + col + 0) * minScale);
+			vertMap[(row + col * size.x) * 4 + 2].position = sf::Vector2f((xoff + row + 1) * minScale, (yoff + col + 1) * minScale);
+			vertMap[(row + col * size.x) * 4 + 3].position = sf::Vector2f((xoff + row + 0) * minScale, (yoff + col + 1) * minScale);
+
+			if (map[col][row] == 0)
+			{
+				vertMap[(row + col * size.x) * 4 + 0].texCoords = sf::Vector2f(map[col][row] * 8,     0);
+				vertMap[(row + col * size.x) * 4 + 1].texCoords = sf::Vector2f(map[col][row] * 8 + 8, 0);
+				vertMap[(row + col * size.x) * 4 + 2].texCoords = sf::Vector2f(map[col][row] * 8 + 8, 8);
+				vertMap[(row + col * size.x) * 4 + 3].texCoords = sf::Vector2f(map[col][row] * 8,     8);
+			}
 		}
 	w.draw(vertMap, &tex);
-
-	/*for (int col = 0; col < size.y; col++)
-		for (int row = 0; row < size.x / 2; row++)
-		{
-			vertMap[(size.x / 2 - 1 - row + col * size.x / 2) * 4 + 1].position = sf::Vector2f(size.x / 2 * minScale + xoff + row * minScale,            yoff + col * minScale);
-			vertMap[(size.x / 2 - 1 - row + col * size.x / 2) * 4 + 0].position = sf::Vector2f(size.x / 2 * minScale + xoff + row * minScale + minScale, yoff + col * minScale);
-			vertMap[(size.x / 2 - 1 - row + col * size.x / 2) * 4 + 3].position = sf::Vector2f(size.x / 2 * minScale + xoff + row * minScale + minScale, yoff + col * minScale + minScale);
-			vertMap[(size.x / 2 - 1 - row + col * size.x / 2) * 4 + 2].position = sf::Vector2f(size.x / 2 * minScale + xoff + row * minScale,            yoff + col * minScale + minScale);
-		}
-	w.draw(vertMap, &tex);*/
 }
 
 void Game::drawPac(sf::RenderWindow &w)
@@ -66,7 +64,23 @@ void Game::drawPac(sf::RenderWindow &w)
 
 void Game::movePac()
 {
-	pac.move(map, size);
+	pac.move(map, size, dots);
+
+	// print map (DEBUG)
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::M))
+	{
+		system("cls");
+		for (int y = 0; y < size.y; y++)
+		{
+			for (int x = 0; x < size.x; x++)
+			{
+				if (map[y][x] < 10)
+					printf(" ");
+				printf("%d ", int(map[y][x]));
+			}
+			printf("\n");
+		}
+	}
 }
 
 void Game::setPacDir(char dir)
@@ -88,6 +102,8 @@ bool Game::loadMap(std::string name)
 				file.get(c);
 				map[col][row] = c;
 				map[col][size.x - 1 - row] = c;
+				if (c == 0x20)
+					dots += 2;
 			}
 		}
 		return true;
@@ -98,4 +114,7 @@ bool Game::loadMap(std::string name)
 
 void Game::loadFailedMap()
 {
+	for (int col = 0; col < size.y; col++)
+		for (int row = 0; row < size.x; row++)
+			map[col][row] = 0;
 }

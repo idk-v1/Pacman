@@ -24,7 +24,7 @@ private:
 
 	void loadFailedMap();
 
-	char map[31][28];
+	char map[31][28] = { 0 };
 
 	sf::VertexArray vertMap;
 
@@ -35,5 +35,8 @@ private:
 	Pacman pac;
 
 	sf::Texture tex;
+
+	int dots = 0;
+
 };
 

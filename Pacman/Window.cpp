@@ -25,24 +25,49 @@ void Window::start()
 				switch (e.key.code)
 				{
 				case sf::Keyboard::W:
-					game.setPacDir(0);
+					keys[0] = true;
 					break;
 				case sf::Keyboard::D:
-					game.setPacDir(1);
+					keys[1] = true;
 					break;
 				case sf::Keyboard::S:
-					game.setPacDir(2);
+					keys[2] = true;
 					break;
 				case sf::Keyboard::A:
-					game.setPacDir(3);
+					keys[3] = true;
+					break;
+				}
+				break;
+			case sf::Event::KeyReleased:
+				switch (e.key.code)
+				{
+				case sf::Keyboard::W:
+					keys[0] = false;
+					break;
+				case sf::Keyboard::D:
+					keys[1] = false;
+					break;
+				case sf::Keyboard::S:
+					keys[2] = false;
+					break;
+				case sf::Keyboard::A:
+					keys[3] = false;
 					break;
 				}
 			}
+
 
 		lag += clock.restart().asMilliseconds();
 		while (lag >= 1000 / 60)
 		{
 			lag -= 1000 / 60;
+
+			dir = -1;
+			for (int i = 0; i < 4; i++)
+				if (keys[i])
+					dir = i;
+
+			game.setPacDir(dir);
 			update();
 		}
 		render();

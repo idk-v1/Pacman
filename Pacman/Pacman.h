@@ -7,15 +7,21 @@ class Pacman
 public:
 	Pacman();
 
-	void move(char[31][28], sf::Vector2i);
+	void move(char[31][28], sf::Vector2i, int&);
 
 	void draw(sf::RenderWindow&, sf::Vector2i);
 
 	void setDir(char);
 
-	char getTile(char[31][28], int, int);
+	sf::Vector2f getPos();
 
 private:
+	char getTile(char[31][28], int, int);
+
+	void setTile(char[31][28], int, int, char);
+
+	bool canMove(char[31][28], int, int);
+
 	sf::Vector2f pos = {13.5f, 23.f};
 
 	float speed = 0.095f;
