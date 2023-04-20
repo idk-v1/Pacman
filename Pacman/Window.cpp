@@ -5,7 +5,8 @@ Window::Window(int x, int y)
 	w.create(sf::VideoMode(x, y), "PacMan");
 	w.setFramerateLimit(60);
 
-	game.load("testmap");
+	game = Game(font);
+	game.load(level);
 }
 
 void Window::start()
@@ -62,12 +63,6 @@ void Window::start()
 		{
 			lag -= 1000 / 60;
 
-			dir = -1;
-			for (int i = 0; i < 4; i++)
-				if (keys[i])
-					dir = i;
-
-			game.setPacDir(dir);
 			update();
 		}
 		render();
@@ -76,7 +71,27 @@ void Window::start()
 
 void Window::update()
 {
+	int overState;
+
+	dir = -1;
+	for (int i = 0; i < 4; i++)
+		if (keys[i])
+			dir = i;
+
+	game.setPacDir(dir);
 	game.movePac();
+	game.moveGhosts();
+
+	overState = game.isOver();
+	if (overState)
+	{
+		game = Game(font);
+		game.load(level);
+		if (overState == 1)
+			printf("You Win!\n");
+		else
+			printf("You Lose!\n");
+	}
 }
 
 void Window::render()
@@ -87,6 +102,8 @@ void Window::render()
 	w.setView(view);
 
 	game.drawMap(w);
+
+	game.drawGhost(w);
 
 	game.drawPac(w);
 

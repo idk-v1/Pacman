@@ -5,7 +5,7 @@ Pacman::Pacman()
 	rect.setFillColor(sf::Color(0xFFFF00FF));
 }
 
-void Pacman::move(char map[31][28], sf::Vector2i size, int &dots)
+void Pacman::move(char map[31][28], sf::Vector2i size, int &dots, bool &canAttack)
 {
 	// change direction if able
 	switch (nextDir)
@@ -65,6 +65,12 @@ void Pacman::move(char map[31][28], sf::Vector2i size, int &dots)
 		dots--;
 		setTile(map, pos.x + 0.49, pos.y, 0);
 	}
+	else if (getTile(map, pos.x + 0.49, pos.y) == 0x21)
+	{
+		dots--;
+		setTile(map, pos.x + 0.49, pos.y, 0);
+		canAttack = true;
+	}
 
 	if (pos.x < 0)
 		pos.x += size.x;
@@ -78,9 +84,9 @@ void Pacman::move(char map[31][28], sf::Vector2i size, int &dots)
 
 void Pacman::draw(sf::RenderWindow &w, sf::Vector2i size)
 {
-	float minScale = std::min(w.getSize().x / (float)size.x, w.getSize().y / (float)size.y);
+	float minScale = std::min(w.getSize().x / (float)size.x, w.getSize().y / (float)(size.y + 2 + 3));
 	float xoff = (w.getSize().x - size.x * minScale) / 2.f;
-	float yoff = (w.getSize().y - size.y * minScale) / 2.f;
+	float yoff = (w.getSize().y - (size.y + 2) * minScale) / 2.f;
 
 	rect.setSize(sf::Vector2f(width * minScale, width * minScale));
 	rect.setPosition(xoff + pos.x * minScale, yoff + pos.y * minScale);
@@ -99,15 +105,14 @@ sf::Vector2f Pacman::getPos()
 
 char Pacman::getTile(char map[31][28], int x, int y)
 {
-	if (x < 0 || y < 0 || x >= 28 || y >= 31)
-		return 255;
-	return map[y][x];
+	if (!(x < 0 || y < 0 || x >= 28 || y >= 31))
+		return map[y][x];
+	return -1;
 }
 
 void Pacman::setTile(char map[31][28], int x, int y, char val)
 {
-	if (x < 0 || y < 0 || x >= 28 || y >= 31);
-	else
+	if (!(x < 0 || y < 0 || x >= 28 || y >= 31))
 		map[y][x] = val;
 }
 
@@ -117,9 +122,15 @@ bool Pacman::canMove(char map[31][28], int x, int y)
 	{
 	case 0x00:
 	case 0x20:
-	case 0xFF:
+	case 0x21:
+	case -1:
 		return true;
 	default:
 		return false;
 	}
+}
+
+void Pacman::reset()
+{
+	*this = Pacman();
 }

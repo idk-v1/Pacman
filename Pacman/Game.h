@@ -2,22 +2,31 @@
 #include <vector>
 #include <fstream>
 
-#include "Pacman.h"
+#include "Ghost.h"
+#include "RedGhost.h"
 
 class Game
 {
 public:
+	Game(sf::Font&);
+
 	Game();
 
-	void load(std::string);
+	void load(int);
 
 	void drawMap(sf::RenderWindow&);
 
 	void drawPac(sf::RenderWindow&);
 
+	void drawGhost(sf::RenderWindow&);
+
 	void movePac();
 
+	void moveGhosts();
+
 	void setPacDir(char);
+
+	char isOver(); // 0 = Not done, 1 = Win, 2 = Lose
 
 private:
 	bool loadMap(std::string);
@@ -38,5 +47,16 @@ private:
 
 	int dots = 0;
 
+	std::vector<Ghost*> ghosts;
+
+	sf::Text text;
+
+	char over = 0;
+
+	bool failedMap = false;
+
+	int timer = 0, ticks = 0;
+
+	bool pacAttack = false;
 };
 

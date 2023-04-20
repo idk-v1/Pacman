@@ -1,16 +1,25 @@
 #include "Game.h"
 
-Game::Game()
+Game::Game(sf::Font &f)
 {
 	vertMap.setPrimitiveType(sf::Quads);
 	tex.loadFromFile("Res/Textures.png");
+
+	text.setFont(f);
+
+	ghosts.push_back(new RedGhost());
+	ghosts.push_back(new Ghost());
 }
 
-void Game::load(std::string name)
+Game::Game()
+{
+}
+
+void Game::load(int level)
 {
 	int xpos;
 
-	if (!loadMap("Maps/" + name + ".bin"))
+	if (!loadMap("Maps/map0.bin"))
 		loadFailedMap();
 
 	// all pacman mazes are symmetrical
@@ -33,25 +42,25 @@ void Game::load(std::string name)
 
 void Game::drawMap(sf::RenderWindow& w)
 {
-	float minScale = std::min(w.getSize().x / (float)size.x, w.getSize().y / (float)size.y);
+	float minScale = std::min(w.getSize().x / (float)size.x, w.getSize().y / (float)(size.y + 2 + 3));
 	float xoff = (w.getSize().x - size.x * minScale) / 2.f;
-	float yoff = (w.getSize().y - size.y * minScale) / 2.f;
+	float yoff = (w.getSize().y - (size.y + 2) * minScale) / 2.f;
 
 	// position map to fill all of the window
 	for (int col = 0; col < size.y; col++)
 		for (int row = 0; row < size.x; row++)
 		{
-			vertMap[(row + col * size.x) * 4 + 0].position = sf::Vector2f((xoff + row + 0) * minScale, (yoff + col + 0) * minScale);
-			vertMap[(row + col * size.x) * 4 + 1].position = sf::Vector2f((xoff + row + 1) * minScale, (yoff + col + 0) * minScale);
-			vertMap[(row + col * size.x) * 4 + 2].position = sf::Vector2f((xoff + row + 1) * minScale, (yoff + col + 1) * minScale);
-			vertMap[(row + col * size.x) * 4 + 3].position = sf::Vector2f((xoff + row + 0) * minScale, (yoff + col + 1) * minScale);
+			vertMap[(row + col * size.x) * 4 + 0].position = sf::Vector2f(xoff + (row + 0) * minScale, yoff + (col + 0) * minScale);
+			vertMap[(row + col * size.x) * 4 + 1].position = sf::Vector2f(xoff + (row + 1) * minScale, yoff + (col + 0) * minScale);
+			vertMap[(row + col * size.x) * 4 + 2].position = sf::Vector2f(xoff + (row + 1) * minScale, yoff + (col + 1) * minScale);
+			vertMap[(row + col * size.x) * 4 + 3].position = sf::Vector2f(xoff + (row + 0) * minScale, yoff + (col + 1) * minScale);
 
 			if (map[col][row] == 0)
 			{
-				vertMap[(row + col * size.x) * 4 + 0].texCoords = sf::Vector2f(map[col][row] * 8,     0);
-				vertMap[(row + col * size.x) * 4 + 1].texCoords = sf::Vector2f(map[col][row] * 8 + 8, 0);
-				vertMap[(row + col * size.x) * 4 + 2].texCoords = sf::Vector2f(map[col][row] * 8 + 8, 8);
-				vertMap[(row + col * size.x) * 4 + 3].texCoords = sf::Vector2f(map[col][row] * 8,     8);
+				vertMap[(row + col * size.x) * 4 + 0].texCoords = sf::Vector2f((map[col][row] + 0) * 8, 0);
+				vertMap[(row + col * size.x) * 4 + 1].texCoords = sf::Vector2f((map[col][row] + 1) * 8, 0);
+				vertMap[(row + col * size.x) * 4 + 2].texCoords = sf::Vector2f((map[col][row] + 1) * 8, 8);
+				vertMap[(row + col * size.x) * 4 + 3].texCoords = sf::Vector2f((map[col][row] + 0) * 8, 8);
 			}
 		}
 	w.draw(vertMap, &tex);
@@ -62,23 +71,79 @@ void Game::drawPac(sf::RenderWindow &w)
 	pac.draw(w, size);
 }
 
+void Game::drawGhost(sf::RenderWindow &w)
+{
+	for (auto ghost : ghosts)
+		ghost->draw(w, size);
+}
+
 void Game::movePac()
 {
-	pac.move(map, size, dots);
+	bool oldPacAttack = pacAttack, pacAtt = false;
+	int rx = rand() % size.x;
+	int ry = rand() % size.y;
 
-	// print map (DEBUG)
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::M))
+	pacAttack = false;
+	pac.move(map, size, dots, pacAtt);
+	if (pacAtt)
+		pacAttack = true;
+	for (auto& ghost : ghosts)
 	{
-		system("cls");
-		for (int y = 0; y < size.y; y++)
+		if (int(pac.getPos().x + 0.49) == int(ghost->getPos().x + 0.49) && int(pac.getPos().y + 0.49) == int(ghost->getPos().y + 0.49))
 		{
-			for (int x = 0; x < size.x; x++)
+			if (ghost->getMode() == 2)
+				ghost->reset();
+			else
 			{
-				if (map[y][x] < 10)
-					printf(" ");
-				printf("%d ", int(map[y][x]));
+				lives--;
+				for (auto& ghost : ghosts)
+					ghost->reset();
+				pac.reset();
 			}
-			printf("\n");
+		}
+	}
+	if (dots == 0 || sf::Keyboard::isKeyPressed(sf::Keyboard::R))
+		over = 1;
+	if (lives == 0)
+		over = 2;
+
+	if (pacAtt)
+	{
+		timer = 600;
+		for (auto& ghost : ghosts)
+			ghost->setMode(2);
+	}
+	if (pacAttack)
+	{
+		timer--;
+		if (timer == 0)
+		{
+			pacAttack = false;
+			for (auto& ghost : ghosts)
+				ghost->setMode(0);
+		}
+	}
+
+	ticks++;
+
+	if (failedMap && ticks % std::max(100 - ticks / 100, 1) == 0)
+	{
+		if (map[ry][rx] == 0x20)
+			dots--;
+		map[ry][rx] = 0;
+	}
+}
+
+void Game::moveGhosts()
+{
+	for (auto& ghost : ghosts)
+	{
+		if (ghost->getMode() == -1 && ghost->getDotReq() > 240 - dots)
+			ghost->setMode(1);
+		if (ghost->getMode() != -1)
+		{
+			ghost->setTarget(ghosts, pac);
+			ghost->move(map, size);
 		}
 	}
 }
@@ -86,6 +151,11 @@ void Game::movePac()
 void Game::setPacDir(char dir)
 {
 	pac.setDir(dir);
+}
+
+char Game::isOver() 
+{
+	return over;
 }
 
 bool Game::loadMap(std::string name)
@@ -102,7 +172,7 @@ bool Game::loadMap(std::string name)
 				file.get(c);
 				map[col][row] = c;
 				map[col][size.x - 1 - row] = c;
-				if (c == 0x20)
+				if (c == 0x20 || c == 0x21)
 					dots += 2;
 			}
 		}
@@ -114,7 +184,33 @@ bool Game::loadMap(std::string name)
 
 void Game::loadFailedMap()
 {
+	char c;
+	srand(time(NULL));
 	for (int col = 0; col < size.y; col++)
-		for (int row = 0; row < size.x; row++)
-			map[col][row] = 0;
+		for (int row = 0; row < size.x / 2; row++)
+		{
+			switch (rand() % 7)
+			{
+			case 0:
+			case 1:
+			case 2:
+				c = (rand() % 0x21);
+				break;
+			case 3:
+			case 4:
+				c = 0x20;
+				break;
+			case 5:
+			case 6:
+				c = 0;
+			}
+			map[col][row] = c;
+			map[col][size.x - 1 - row] = c;
+			if (c == 0x20)
+				dots += 2;
+		}
+	map[23][13] = 0;
+	map[23][14] = 0;
+
+	failedMap = true;
 }

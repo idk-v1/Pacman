@@ -26,6 +26,11 @@ private:
 
 	bool keys[4] = { false };
 
+	sf::Font font;
+
 	Game game;
+
+	int level = 0;
+
 };
 
