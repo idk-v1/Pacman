@@ -45,7 +45,7 @@ private:
 
 	sf::Texture tex;
 
-	int dots = 244;
+	int dots = 0;
 
 	std::vector<Ghost*> ghosts;
 
