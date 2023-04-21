@@ -237,6 +237,8 @@ bool Game::loadMap(std::string name)
 				file.get(c);
 				map[col][row] = c;
 				map[col][size.x - 1 - row] = c;
+				if (c == 0x20 || c == 0x21)
+					dots += 2;
 			}
 		}
 		return true;
