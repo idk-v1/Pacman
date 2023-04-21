@@ -8,7 +8,7 @@ Game::Game(sf::Font &f)
 	text.setFont(f);
 
 	ghosts.push_back(new RedGhost());
-	ghosts.push_back(new Ghost());
+	ghosts.push_back(new PinkGhost());
 }
 
 Game::Game()
@@ -80,7 +80,7 @@ void Game::drawMap(sf::RenderWindow& w)
 {
 	float minScale = std::min(w.getSize().x / (float)size.x, w.getSize().y / (float)(size.y + 2 + 3));
 	float xoff = (w.getSize().x - size.x * minScale) / 2.f;
-	float yoff = (w.getSize().y - (size.y + 2) * minScale) / 2.f;
+	float yoff = (w.getSize().y - (size.y - 2) * minScale) / 2.f;
 
 	// position map to fill all of the window
 	for (int col = 0; col < size.y; col++)

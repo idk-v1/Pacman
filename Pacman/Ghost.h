@@ -52,5 +52,7 @@ protected:
 	sf::Color color;
 
 	int dotReq;
+
+	int restart = 60 * 2;
 };
 

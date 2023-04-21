@@ -137,6 +137,7 @@
     <ClCompile Include="Ghost.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Pacman.cpp" />
+    <ClCompile Include="PinkGhost.cpp" />
     <ClCompile Include="RedGhost.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
@@ -144,6 +145,7 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="Ghost.h" />
     <ClInclude Include="Pacman.h" />
+    <ClInclude Include="PinkGhost.h" />
     <ClInclude Include="RedGhost.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>

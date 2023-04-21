@@ -86,11 +86,16 @@ void Window::update()
 	if (overState)
 	{
 		game = Game(font);
-		game.load(level);
 		if (overState == 1)
+		{
 			printf("You Win!\n");
+			game.load(++level);
+		}
 		else
+		{
 			printf("You Lose!\n");
+			game.load(level);
+		}
 	}
 }
 

@@ -2,8 +2,8 @@
 #include <vector>
 #include <fstream>
 
-#include "Ghost.h"
 #include "RedGhost.h"
+#include "PinkGhost.h"
 
 class Game
 {
