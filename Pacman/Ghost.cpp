@@ -7,11 +7,12 @@ Ghost::Ghost()
 	target = pos;
 	scatterPos = pos;
 	dotReq = 100;
+	mode = 1;
 }
 
 void Ghost::move(char map[31][28], sf::Vector2i size)
 {
-	float dist = 99999, tmpDist = -1;
+	float dist = 99999.f, tmpDist = -1;
 	char newDir = -1, randDir = rand() % 4;
 
 	// change direction if able
@@ -125,6 +126,8 @@ void Ghost::leaveHouse()
 
 void Ghost::setMode(char newMode)
 {
+	if (mode < 2 && newMode < 2 && newMode != mode)
+		dir = (dir + 2) % 4;
 	mode = newMode;
 }
 
@@ -132,9 +135,6 @@ void Ghost::setTarget(std::vector<Ghost*> &ghosts, Pacman& pac)
 {
 	switch (mode)
 	{
-	case 0:
-		target = target;
-		break;
 	case 1:
 		target = scatterPos;
 		break;

@@ -45,7 +45,7 @@ private:
 
 	sf::Texture tex;
 
-	int dots = 0;
+	int dots = 244;
 
 	std::vector<Ghost*> ghosts;
 
@@ -55,8 +55,10 @@ private:
 
 	bool failedMap = false;
 
-	int timer = 0, ticks = 0;
+	int timer = 0, ticks = 0, phaseTimer = 0, phase = 0;
 
 	bool pacAttack = false;
+
+	int phases[4 * 2];
 };
 

@@ -38,6 +38,42 @@ void Game::load(int level)
 			vertMap[(size.x - 1 - row + col * size.x) * 4 + 2].texCoords = sf::Vector2f(xpos * 8 + 0, 8);
 			vertMap[(size.x - 1 - row + col * size.x) * 4 + 3].texCoords = sf::Vector2f(xpos * 8 + 8, 8);
 		}
+
+	if (level < 1)
+	{
+		phases[0] = 7 * 60;
+		phases[1] = 20 * 60;
+		phases[2] = 7 * 60;
+		phases[3] = 20 * 60;
+		phases[4] = 5 * 60;
+		phases[5] = 20 * 60;
+		phases[6] = 5 * 60;
+		phases[7] = -1;
+	}
+	else if (level < 4)
+	{
+		phases[0] = 7 * 60;
+		phases[1] = 20 * 60;
+		phases[2] = 7 * 60;
+		phases[3] = 20 * 60;
+		phases[4] = 5 * 60;
+		phases[5] = 1033 * 60;
+		phases[6] = 1;
+		phases[7] = -1;
+	}
+	else
+	{
+		phases[0] = 5 * 60;
+		phases[1] = 20 * 60;
+		phases[2] = 5 * 60;
+		phases[3] = 20 * 60;
+		phases[4] = 5 * 60;
+		phases[5] = 1037 * 60;
+		phases[6] = 1;
+		phases[7] = -1;
+	}
+
+	phaseTimer = phases[phase];
 }
 
 void Game::drawMap(sf::RenderWindow& w)
@@ -79,11 +115,10 @@ void Game::drawGhost(sf::RenderWindow &w)
 
 void Game::movePac()
 {
-	bool oldPacAttack = pacAttack, pacAtt = false;
+	bool pacAtt = false;
 	int rx = rand() % size.x;
 	int ry = rand() % size.y;
 
-	pacAttack = false;
 	pac.move(map, size, dots, pacAtt);
 	if (pacAtt)
 		pacAttack = true;
@@ -92,20 +127,21 @@ void Game::movePac()
 		if (int(pac.getPos().x + 0.49) == int(ghost->getPos().x + 0.49) && int(pac.getPos().y + 0.49) == int(ghost->getPos().y + 0.49))
 		{
 			if (ghost->getMode() == 2)
+			{
 				ghost->reset();
+				ghost->setMode(phase % 2 == 0);
+			}
 			else
 			{
 				lives--;
 				for (auto& ghost : ghosts)
 					ghost->reset();
 				pac.reset();
+				phase = 0;
+				phaseTimer = phases[phase];
 			}
 		}
 	}
-	if (dots == 0 || sf::Keyboard::isKeyPressed(sf::Keyboard::R))
-		over = 1;
-	if (lives == 0)
-		over = 2;
 
 	if (pacAtt)
 	{
@@ -132,10 +168,39 @@ void Game::movePac()
 			dots--;
 		map[ry][rx] = 0;
 	}
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num0)) // set ghosts to chase
+		for (auto& ghost : ghosts)
+			ghost->setMode(0);
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1)) // set ghosts to scatter
+		for (auto& ghost : ghosts)
+			ghost->setMode(1);
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2)) // set ghosts to frightened
+		for (auto& ghost : ghosts)
+			ghost->setMode(2);
+
+	if (dots == 0 || sf::Keyboard::isKeyPressed(sf::Keyboard::R)) // reset map
+		over = 1;
+	if (lives == 0)
+		over = 2;
 }
 
 void Game::moveGhosts()
 {
+	if (!pacAttack)
+	{
+		if (phaseTimer == 0)
+		{
+			phase++;
+			phaseTimer = phases[phase];
+			for (auto& ghost : ghosts)
+				ghost->setMode(phase % 2 == 0);
+		}
+		phaseTimer--;
+	}
+
 	for (auto& ghost : ghosts)
 	{
 		if (ghost->getMode() == -1 && ghost->getDotReq() > 240 - dots)
@@ -172,8 +237,6 @@ bool Game::loadMap(std::string name)
 				file.get(c);
 				map[col][row] = c;
 				map[col][size.x - 1 - row] = c;
-				if (c == 0x20 || c == 0x21)
-					dots += 2;
 			}
 		}
 		return true;
@@ -185,6 +248,7 @@ bool Game::loadMap(std::string name)
 void Game::loadFailedMap()
 {
 	char c;
+	dots = 0;
 	srand(time(NULL));
 	for (int col = 0; col < size.y; col++)
 		for (int row = 0; row < size.x / 2; row++)
@@ -194,19 +258,21 @@ void Game::loadFailedMap()
 			case 0:
 			case 1:
 			case 2:
-				c = (rand() % 0x21);
+				c = (rand() % 0x22); // random. mostly walls
 				break;
 			case 3:
 			case 4:
-				c = 0x20;
+				c = 0x20; // dots
 				break;
 			case 5:
+				c = 0; // empty space
+				break;
 			case 6:
-				c = 0;
+				c = (rand() % 5 == 0 ? 0x21 : 0x20); // power dots / dots
 			}
 			map[col][row] = c;
 			map[col][size.x - 1 - row] = c;
-			if (c == 0x20)
+			if (c == 0x20 || c == 0x21)
 				dots += 2;
 		}
 	map[23][13] = 0;
