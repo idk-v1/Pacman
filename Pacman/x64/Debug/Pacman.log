@@ -1,0 +1,122 @@
+﻿  Ghost.cpp
+C:\Users\Fish\source\repos\idk-v1\Pacman\Pacman\Ghost.cpp(35,35): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\Fish\source\repos\idk-v1\Pacman\Pacman\Ghost.cpp(35,25): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\Fish\source\repos\idk-v1\Pacman\Pacman\Ghost.cpp(35,80): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\Fish\source\repos\idk-v1\Pacman\Pacman\Ghost.cpp(35,66): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+C:\Users\Fish\source\repos\idk-v1\Pacman\Pacman\Ghost.cpp(37,25): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\Fish\source\repos\idk-v1\Pacman\Pacman\Ghost.cpp(45,44): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\Fish\source\repos\idk-v1\Pacman\Pacman\Ghost.cpp(45,36): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\Fish\source\repos\idk-v1\Pacman\Pacman\Ghost.cpp(45,89): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+C:\Users\Fish\source\repos\idk-v1\Pacman\Pacman\Ghost.cpp(45,78): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\Fish\source\repos\idk-v1\Pacman\Pacman\Ghost.cpp(47,25): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\Fish\source\repos\idk-v1\Pacman\Pacman\Ghost.cpp(55,43): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\Fish\source\repos\idk-v1\Pacman\Pacman\Ghost.cpp(55,25): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\Fish\source\repos\idk-v1\Pacman\Pacman\Ghost.cpp(55,92): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\Fish\source\repos\idk-v1\Pacman\Pacman\Ghost.cpp(55,70): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+C:\Users\Fish\source\repos\idk-v1\Pacman\Pacman\Ghost.cpp(57,25): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\Fish\source\repos\idk-v1\Pacman\Pacman\Ghost.cpp(65,40): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\Fish\source\repos\idk-v1\Pacman\Pacman\Ghost.cpp(65,28): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\Fish\source\repos\idk-v1\Pacman\Pacman\Ghost.cpp(65,81): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+C:\Users\Fish\source\repos\idk-v1\Pacman\Pacman\Ghost.cpp(65,66): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\Fish\source\repos\idk-v1\Pacman\Pacman\Ghost.cpp(67,25): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\Fish\source\repos\idk-v1\Pacman\Pacman\Ghost.cpp(86,35): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\Fish\source\repos\idk-v1\Pacman\Pacman\Ghost.cpp(86,25): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\Fish\source\repos\idk-v1\Pacman\Pacman\Ghost.cpp(87,21): warning C4244: '-=': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\Fish\source\repos\idk-v1\Pacman\Pacman\Ghost.cpp(92,47): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\Fish\source\repos\idk-v1\Pacman\Pacman\Ghost.cpp(92,35): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+C:\Users\Fish\source\repos\idk-v1\Pacman\Pacman\Ghost.cpp(93,21): warning C4244: '+=': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\Fish\source\repos\idk-v1\Pacman\Pacman\Ghost.cpp(98,42): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+C:\Users\Fish\source\repos\idk-v1\Pacman\Pacman\Ghost.cpp(98,25): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\Fish\source\repos\idk-v1\Pacman\Pacman\Ghost.cpp(99,21): warning C4244: '+=': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\Fish\source\repos\idk-v1\Pacman\Pacman\Ghost.cpp(104,40): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\Fish\source\repos\idk-v1\Pacman\Pacman\Ghost.cpp(104,28): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\Fish\source\repos\idk-v1\Pacman\Pacman\Ghost.cpp(105,21): warning C4244: '-=': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+  Pacman.vcxproj -> C:\Users\Fish\source\repos\idk-v1\Pacman\x64\Debug\Pacman.exe

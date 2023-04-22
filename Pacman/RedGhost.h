@@ -7,6 +7,6 @@ public:
 
 	void setTarget(std::vector<Ghost*>&, Pacman&);
 
-	void reset();
+	void reset(bool);
 };
 

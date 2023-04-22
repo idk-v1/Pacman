@@ -128,14 +128,14 @@ void Game::movePac()
 		{
 			if (ghost->getMode() == 2)
 			{
-				ghost->reset();
+				ghost->reset(true);
 				ghost->setMode(phase % 2 == 0);
 			}
 			else
 			{
 				lives--;
 				for (auto& ghost : ghosts)
-					ghost->reset();
+					ghost->reset(false);
 				pac.reset();
 				phase = 0;
 				phaseTimer = phases[phase];
@@ -145,7 +145,7 @@ void Game::movePac()
 
 	if (pacAtt)
 	{
-		timer = 600;
+		timer = 300;
 		for (auto& ghost : ghosts)
 			ghost->setMode(2);
 	}

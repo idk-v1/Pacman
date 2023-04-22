@@ -17,91 +17,105 @@ void Ghost::move(char map[31][28], sf::Vector2i size)
 
 	if (restart == 0)
 	{
-		// change direction if able
-		if (dir != 2)
-			if (canMove(map, pos.x, pos.y - speed) && canMove(map, pos.x + 0.9, pos.y - speed))
-			{
-				tmpDist = std::sqrt(std::pow(int(pos.x + 0.49) - target.x, 2) + std::pow(int(pos.y + 0.49 - 1) - target.y, 2));
-				if (tmpDist < dist || randDir * (mode == 2) == 0)
-				{
-					newDir = 0;
-					dist = tmpDist;
-				}
-			}
-		if (dir != 3)
-			if (canMove(map, pos.x + speed + 1, pos.y) && canMove(map, pos.x + speed + 1, pos.y + 0.9))
-			{
-				tmpDist = std::sqrt(std::pow(int(pos.x + 0.49 + 1) - target.x, 2) + std::pow(int(pos.y + 0.49) - target.y, 2));
-				if (tmpDist < dist || randDir * (mode == 2) == 1)
-				{
-					newDir = 1;
-					dist = tmpDist;
-				}
-			}
-		if (dir != 0)
-			if (canMove(map, pos.x, pos.y + speed + 1) && canMove(map, pos.x + 0.9, pos.y + speed + 1))
-			{
-				tmpDist = std::sqrt(std::pow(int(pos.x + 0.49) - target.x, 2) + std::pow(int(pos.y + 0.49 + 1) - target.y, 2));
-				if (tmpDist < dist || randDir * (mode == 2) == 2)
-				{
-					newDir = 2;
-					dist = tmpDist;
-				}
-			}
-		if (dir != 1)
-			if (canMove(map, pos.x - speed, pos.y) && canMove(map, pos.x - speed, pos.y + 0.9))
-			{
-				tmpDist = std::sqrt(std::pow(int(pos.x + 0.49 - 1) - target.x, 2) + std::pow(int(pos.y + 0.49) - target.y, 2));
-				if (tmpDist < dist || randDir * (mode == 2) == 3)
-				{
-					newDir = 3;
-					dist = tmpDist;
-				}
-			}
-		if (newDir != -1)
-			dir = newDir;
-
-		if (dir % 2)
-			pos.y = std::round(pos.y);
-		else
-			pos.x = std::round(pos.x);
-
-		// move if not colliding
-		switch (dir)
+		if (inBox)
 		{
-		case 0:
-			if (canMove(map, pos.x, pos.y - speed))
-				pos.y -= speed * (mode == 2 ? 0.66 : 1);
+			if (pos.x < 13)
+				pos.x += speed;
+			else if (pos.x > 14)
+				pos.x -= speed;
 			else
-				pos.y = std::round(pos.y);
-			break;
-		case 1:
-			if (canMove(map, pos.x + 0.99 + speed, pos.y))
-				pos.x += speed * (mode == 2 ? 0.66 : 1);
-			else
-				pos.x = std::round(pos.x);
-			break;
-		case 2:
-			if (canMove(map, pos.x, pos.y + 0.99 + speed))
-				pos.y += speed * (mode == 2 ? 0.66 : 1);
-			else
-				pos.y = std::round(pos.y);
-			break;
-		case 3:
-			if (canMove(map, pos.x - speed, pos.y))
-				pos.x -= speed * (mode == 2 ? 0.66 : 1);
-			else
-				pos.x = std::round(pos.x);
+				pos.y -= speed;
+			if (pos.y <= 11)
+				inBox = false;
 		}
+		else
+		{
+			// change direction if able
+			if (dir != 2)
+				if (canMove(map, pos.x, pos.y - speed) && canMove(map, pos.x + 0.99, pos.y - speed))
+				{
+					tmpDist = std::sqrt(std::pow(int(pos.x + 0.49) - target.x, 2) + std::pow(int(pos.y + 0.49 - 1) - target.y, 2));
+					if (tmpDist < dist || randDir * (mode == 2) == 0)
+					{
+						newDir = 0;
+						dist = tmpDist;
+					}
+				}
+			if (dir != 3)
+				if (canMove(map, pos.x + speed + 1, pos.y) && canMove(map, pos.x + speed + 1, pos.y + 0.99))
+				{
+					tmpDist = std::sqrt(std::pow(int(pos.x + 0.49 + 1) - target.x, 2) + std::pow(int(pos.y + 0.49) - target.y, 2));
+					if (tmpDist < dist || randDir * (mode == 2) == 1)
+					{
+						newDir = 1;
+						dist = tmpDist;
+					}
+				}
+			if (dir != 0)
+				if (canMove(map, pos.x, pos.y + speed + 1) && canMove(map, pos.x + 0.99, pos.y + speed + 1))
+				{
+					tmpDist = std::sqrt(std::pow(int(pos.x + 0.49) - target.x, 2) + std::pow(int(pos.y + 0.49 + 1) - target.y, 2));
+					if (tmpDist < dist || randDir * (mode == 2) == 2)
+					{
+						newDir = 2;
+						dist = tmpDist;
+					}
+				}
+			if (dir != 1)
+				if (canMove(map, pos.x - speed, pos.y) && canMove(map, pos.x - speed, pos.y + 0.99))
+				{
+					tmpDist = std::sqrt(std::pow(int(pos.x + 0.49 - 1) - target.x, 2) + std::pow(int(pos.y + 0.49) - target.y, 2));
+					if (tmpDist < dist || randDir * (mode == 2) == 3)
+					{
+						newDir = 3;
+						dist = tmpDist;
+					}
+				}
+			if (newDir != -1)
+				dir = newDir;
 
-		if (pos.x < 0)
-			pos.x += size.x;
-		if (pos.y < 0)
-			pos.y += size.y;
-		if (pos.x >= size.x)
-			pos.x -= size.x;
-		if (pos.y >= size.y)
-			pos.y -= size.y;
+			if (dir % 2)
+				pos.y = std::round(pos.y);
+			else
+				pos.x = std::round(pos.x);
+
+			// move if not colliding
+			switch (dir)
+			{
+			case 0:
+				if (canMove(map, pos.x, pos.y - speed))
+					pos.y -= speed * (mode == 2 ? 0.8 : 1);
+				else
+					pos.y = std::round(pos.y);
+				break;
+			case 1:
+				if (canMove(map, pos.x + 0.99 + speed, pos.y))
+					pos.x += speed * (mode == 2 ? 0.8 : 1);
+				else
+					pos.x = std::round(pos.x);
+				break;
+			case 2:
+				if (canMove(map, pos.x, pos.y + 0.99 + speed))
+					pos.y += speed * (mode == 2 ? 0.8 : 1);
+				else
+					pos.y = std::round(pos.y);
+				break;
+			case 3:
+				if (canMove(map, pos.x - speed, pos.y))
+					pos.x -= speed * (mode == 2 ? 0.8 : 1);
+				else
+					pos.x = std::round(pos.x);
+			}
+
+			if (pos.x < 0)
+				pos.x += size.x;
+			if (pos.y < 0)
+				pos.y += size.y;
+			if (pos.x >= size.x)
+				pos.x -= size.x;
+			if (pos.y >= size.y)
+				pos.y -= size.y;
+		}
 	}
 	else
 		restart--;
@@ -122,11 +136,6 @@ void Ghost::draw(sf::RenderWindow &w, sf::Vector2i size)
 sf::Vector2f Ghost::getPos()
 {
 	return pos;
-}
-
-void Ghost::leaveHouse()
-{
-	target = { 13, 11 };
 }
 
 void Ghost::setMode(char newMode)
@@ -167,7 +176,6 @@ bool Ghost::canMove(char map[31][28], int x, int y)
 	case 0x00:
 	case 0x20:
 	case 0x21:
-	case 0x1F:
 	case -1:
 		return true;
 	default:
@@ -175,9 +183,11 @@ bool Ghost::canMove(char map[31][28], int x, int y)
 	}
 }
 
-void Ghost::reset()
+void Ghost::reset(bool inBox)
 {
 	*this = Ghost();
+	if (inBox)
+		this->pos = { 13,15 };
 }
 
 char Ghost::getMode()
@@ -188,4 +198,9 @@ char Ghost::getMode()
 int Ghost::getDotReq()
 {
 	return dotReq;
+}
+
+bool Ghost::isInBox()
+{
+	return inBox;
 }

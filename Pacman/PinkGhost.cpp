@@ -36,7 +36,9 @@ void PinkGhost::setTarget(std::vector<Ghost*>& ghosts, Pacman& pac)
 	}
 }
 
-void PinkGhost::reset()
+void PinkGhost::reset(bool)
 {
 	*this = PinkGhost();
+	if (inBox)
+		this->pos = { 13,15 };
 }
