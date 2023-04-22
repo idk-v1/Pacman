@@ -8,8 +8,6 @@ RedGhost::RedGhost()
 	scatterPos = { 28, 0 };
 	mode = 1;
 	dotReq = 0;
-	restart = 60 * 2;
-	inBox = false;
 }
 
 void RedGhost::setTarget(std::vector<Ghost*>& ghosts, Pacman& pac)
@@ -28,8 +26,5 @@ void RedGhost::reset(bool inBox)
 {
 	*this = RedGhost();
 	if (inBox)
-	{
-		this->inBox = true;
 		this->pos = { 13,15 };
-	}
 }

@@ -12,17 +12,21 @@ class Ghost
 public:
 	Ghost();
 
-	void move(char[31][28], sf::Vector2i);
+	void update(char[31][28], sf::Vector2i);
 
 	void draw(sf::RenderWindow&, sf::Vector2i);
 
 	sf::Vector2f getPos();
+
+	void leaveHouse();
 
 	void setMode(char);
 
 	virtual void setTarget(std::vector<Ghost*>&, Pacman&);
 
 	virtual void reset(bool);
+
+	void enableMove(bool);
 
 	char getMode();
 
@@ -31,6 +35,10 @@ public:
 	bool isInBox();
 
 protected:
+	void move(char[31][28], sf::Vector2i);
+
+	void turn(char[31][28], sf::Vector2i);
+
 	char getTile(char[31][28], int, int);
 
 	void setTile(char[31][28], int, int, char);
@@ -41,11 +49,11 @@ protected:
 
 	sf::Vector2f pos, target, scatterPos;
 
-	float speed = 0.07f;
+	float speed = 0.1f;
 
 	char dir = 3;
 
-	char mode = 1;
+	char mode = -1;
 
 	float width = 1.f;
 
@@ -53,8 +61,10 @@ protected:
 
 	int dotReq;
 
+	int restart = 45 * 2;
+
 	bool inBox = true;
 
-	int restart = 60 * 2 * 2;
+	bool moveEnabled = false;
 };
 

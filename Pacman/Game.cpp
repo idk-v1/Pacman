@@ -203,13 +203,10 @@ void Game::moveGhosts()
 
 	for (auto& ghost : ghosts)
 	{
-		if (ghost->getMode() == -1 && ghost->getDotReq() > 240 - dots)
-			ghost->setMode(1);
-		if (ghost->getMode() != -1)
-		{
-			ghost->setTarget(ghosts, pac);
-			ghost->move(map, size);
-		}
+		if (ghost->isInBox() && ghost->getDotReq() <= 240 - dots)
+			ghost->enableMove(true);
+		ghost->setTarget(ghosts, pac);
+		ghost->update(map, size);
 	}
 }
 

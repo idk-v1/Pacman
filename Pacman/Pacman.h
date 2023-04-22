@@ -28,13 +28,13 @@ private:
 
 	sf::Vector2f pos = {13.5f, 23.f};
 
-	float speed = 0.069f;
+	float speed = 0.0975f;
 
 	int dir = 3, nextDir = 3; // 0 = UP, 1 = RIGHT, 2 = DOWN, 3 = LEFT
 
 	float width = 1.f;
 
-	int restart = 60 * 2;
+	int restart = 45 * 2;
 
 	sf::RectangleShape rect;
 };

@@ -59,9 +59,9 @@ void Window::start()
 
 
 		lag += clock.restart().asMilliseconds();
-		while (lag >= 1000 / 60)
+		while (lag >= 1000 / 45)
 		{
-			lag -= 1000 / 60;
+			lag -= 1000 / 45;
 
 			update();
 		}
