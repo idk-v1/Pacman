@@ -2,7 +2,7 @@
 
 Window::Window(int x, int y)
 {
-	w.create(sf::VideoMode(x, y), "PacMan");
+	w.create(sf::VideoMode(x * 8, y * 8), "PacMan");
 	w.setFramerateLimit(60);
 
 	game = Game(font);

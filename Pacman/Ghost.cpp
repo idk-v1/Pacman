@@ -71,7 +71,10 @@ void Ghost::update(char map[31][28], sf::Vector2i size)
 		}
 		else
 		{
-			turn(map, size);
+			if (turnCd == 0)
+				turn(map, size);
+			else
+				turnCd--;
 			move(map, size);
 		}
 	}
@@ -124,6 +127,9 @@ void Ghost::turn(char map[31][28], sf::Vector2i size)
 				dist = tmpDist;
 			}
 		}
+	if (dir % 2 != newDir % 2)
+		turnCd = 2;
+
 	if (newDir != -1)
 		dir = newDir;
 
@@ -157,7 +163,7 @@ void Ghost::leaveHouse()
 
 void Ghost::setMode(char newMode)
 {
-	if (mode < 2 && newMode < 2 && newMode != mode)
+	if (!(mode == 2 && newMode < 2) && newMode != mode)
 		dir = (dir + 2) % 4;
 	mode = newMode;
 }

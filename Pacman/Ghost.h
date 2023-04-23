@@ -1,4 +1,5 @@
 //http://gameinternals.com/understanding-pac-man-ghost-behavior
+//https://www.gamedeveloper.com/design/the-pac-man-dossier
 
 
 #pragma once
@@ -53,7 +54,7 @@ protected:
 
 	char dir = 3;
 
-	char mode = -1;
+	char mode = 1;
 
 	float width = 1.f;
 
@@ -64,6 +65,8 @@ protected:
 	int restart = 45 * 2;
 
 	bool inBox = true;
+
+	int turnCd = 0;
 
 	bool moveEnabled = false;
 };
