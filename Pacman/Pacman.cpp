@@ -62,15 +62,15 @@ void Pacman::move(char map[31][28], sf::Vector2i size, int &dots, bool &canAttac
 				pos.x = std::round(pos.x);
 		}
 
-		if (getTile(map, pos.x + 0.49, pos.y) == 0x20)
+		if (getTile(map, pos.x + 0.49, pos.y + 0.49) == 0x20)
 		{
 			dots--;
-			setTile(map, pos.x + 0.49, pos.y, 0);
+			setTile(map, pos.x + 0.49, pos.y + 0.49, 0);
 		}
-		else if (getTile(map, pos.x + 0.49, pos.y) == 0x21)
+		else if (getTile(map, pos.x + 0.49, pos.y + 0.49) == 0x21)
 		{
 			dots--;
-			setTile(map, pos.x + 0.49, pos.y, 0);
+			setTile(map, pos.x + 0.49, pos.y + 0.49, 0);
 			canAttack = true;
 		}
 

@@ -4,6 +4,8 @@
 
 #include "RedGhost.h"
 #include "PinkGhost.h"
+#include "OrangeGhost.h"
+#include "BlueGhost.h"
 
 class Game
 {

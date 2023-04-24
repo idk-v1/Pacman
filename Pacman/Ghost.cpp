@@ -56,7 +56,7 @@ void Ghost::move(char map[31][28], sf::Vector2i size)
 
 void Ghost::update(char map[31][28], sf::Vector2i size)
 {
-	if (restart == 0)
+	if (restart == 0 && moveEnabled)
 	{
 		if (inBox)
 		{

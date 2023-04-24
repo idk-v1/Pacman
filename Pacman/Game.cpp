@@ -9,6 +9,7 @@ Game::Game(sf::Font &f)
 
 	ghosts.push_back(new RedGhost());
 	ghosts.push_back(new PinkGhost());
+	ghosts.push_back(new OrangeGhost());
 }
 
 Game::Game()
@@ -21,6 +22,7 @@ void Game::load(int level)
 
 	if (!loadMap("Maps/map0.bin"))
 		loadFailedMap();
+	printf("dots: %d\n", 244 - dots);
 
 	// all pacman mazes are symmetrical
 	vertMap.resize(size.x * size.y * 4);
@@ -119,6 +121,8 @@ void Game::movePac()
 	int rx = rand() % size.x;
 	int ry = rand() % size.y;
 
+	printf("dots: %d\n", 244 - dots);
+
 	pac.move(map, size, dots, pacAtt);
 	if (pacAtt)
 		pacAttack = true;
@@ -203,10 +207,13 @@ void Game::moveGhosts()
 
 	for (auto& ghost : ghosts)
 	{
-		if (ghost->isInBox() && ghost->getDotReq() <= 240 - dots)
-			ghost->enableMove(true);
-		ghost->setTarget(ghosts, pac);
-		ghost->update(map, size);
+		if (ghost->getDotReq() <= 244 - dots)
+		{
+			if (ghost->isInBox())
+				ghost->enableMove(true);
+			ghost->setTarget(ghosts, pac);
+			ghost->update(map, size);
+		}
 	}
 }
 

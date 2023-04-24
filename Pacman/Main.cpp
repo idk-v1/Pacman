@@ -2,6 +2,6 @@
 
 int main()
 {
-	Window window(28 * 4, (31 + 5) * 4);
+	Window window(28 * 2, (31 + 5) * 2);
 	window.start();
 }

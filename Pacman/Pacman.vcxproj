@@ -133,17 +133,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BlueGhost.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Ghost.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="OrangeGhost.cpp" />
     <ClCompile Include="Pacman.cpp" />
     <ClCompile Include="PinkGhost.cpp" />
     <ClCompile Include="RedGhost.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BlueGhost.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Ghost.h" />
+    <ClInclude Include="OrangeGhost.h" />
     <ClInclude Include="Pacman.h" />
     <ClInclude Include="PinkGhost.h" />
     <ClInclude Include="RedGhost.h" />
