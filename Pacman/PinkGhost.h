@@ -6,7 +6,7 @@ class PinkGhost : public Ghost
 public:
 	PinkGhost();
 
-	void setTarget(std::vector<Ghost*>&, Pacman&);
+	void setTarget(Ghost*, Pacman&);
 
 	void reset(bool);
 };

@@ -10,7 +10,7 @@ OrangeGhost::OrangeGhost()
 	dotReq = 81;
 }
 
-void OrangeGhost::setTarget(std::vector<Ghost*>& ghosts, Pacman& pac)
+void OrangeGhost::setTarget(Ghost* red, Pacman& pac)
 {
 	switch (mode)
 	{

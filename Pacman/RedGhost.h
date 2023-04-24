@@ -5,7 +5,7 @@ class RedGhost : public Ghost
 public:
 	RedGhost();
 
-	void setTarget(std::vector<Ghost*>&, Pacman&);
+	void setTarget(Ghost*, Pacman&);
 
 	void reset(bool);
 };

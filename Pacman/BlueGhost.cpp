@@ -10,7 +10,7 @@ BlueGhost::BlueGhost()
 	dotReq = 30;
 }
 
-void BlueGhost::setTarget(std::vector<Ghost*>& ghosts, Pacman& pac)
+void BlueGhost::setTarget(Ghost* red, Pacman& pac)
 {
 	switch (mode)
 	{
@@ -18,16 +18,16 @@ void BlueGhost::setTarget(std::vector<Ghost*>& ghosts, Pacman& pac)
 		switch (pac.getDir())
 		{
 		case 0:
-			target = { pac.getPos().x, pac.getPos().y - 4 };
+			target = { pac.getPos().x, pac.getPos().y - 2 };
 			break;
 		case 1:
-			target = { pac.getPos().x + 4, pac.getPos().y };
+			target = { pac.getPos().x + 2, pac.getPos().y };
 			break;
 		case 2:
-			target = { pac.getPos().x, pac.getPos().y + 4 };
+			target = { pac.getPos().x, pac.getPos().y + 2 };
 			break;
 		case 3:
-			target = { pac.getPos().x - 4, pac.getPos().y };
+			target = { pac.getPos().x - 2, pac.getPos().y };
 			break;
 		}
 		break;

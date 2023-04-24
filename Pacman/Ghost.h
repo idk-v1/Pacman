@@ -23,7 +23,7 @@ public:
 
 	void setMode(char);
 
-	virtual void setTarget(std::vector<Ghost*>&, Pacman&);
+	virtual void setTarget(Ghost*, Pacman&);
 
 	virtual void reset(bool);
 

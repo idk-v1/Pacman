@@ -1,5 +1,4 @@
 #pragma once
-#include <vector>
 #include <fstream>
 
 #include "RedGhost.h"
@@ -49,7 +48,7 @@ private:
 
 	int dots = 0;
 
-	std::vector<Ghost*> ghosts;
+	Ghost* ghosts[4];
 
 	sf::Text text;
 

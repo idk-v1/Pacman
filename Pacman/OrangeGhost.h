@@ -5,7 +5,7 @@ class OrangeGhost : public Ghost
 public:
 	OrangeGhost();
 
-	void setTarget(std::vector<Ghost*>&, Pacman&);
+	void setTarget(Ghost*, Pacman&);
 
 	void reset(bool);
 };

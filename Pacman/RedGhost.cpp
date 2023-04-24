@@ -10,7 +10,7 @@ RedGhost::RedGhost()
 	dotReq = 0;
 }
 
-void RedGhost::setTarget(std::vector<Ghost*>& ghosts, Pacman& pac)
+void RedGhost::setTarget(Ghost* red, Pacman& pac)
 {
 	switch (mode)
 	{

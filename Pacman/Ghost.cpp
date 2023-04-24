@@ -168,7 +168,7 @@ void Ghost::setMode(char newMode)
 	mode = newMode;
 }
 
-void Ghost::setTarget(std::vector<Ghost*> &ghosts, Pacman& pac)
+void Ghost::setTarget(Ghost* red, Pacman& pac)
 {
 	switch (mode)
 	{

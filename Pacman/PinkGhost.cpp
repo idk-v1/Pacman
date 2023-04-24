@@ -10,7 +10,7 @@ PinkGhost::PinkGhost()
 	dotReq = 0;
 }
 
-void PinkGhost::setTarget(std::vector<Ghost*>& ghosts, Pacman& pac)
+void PinkGhost::setTarget(Ghost* red, Pacman& pac)
 {
 	switch (mode)
 	{
