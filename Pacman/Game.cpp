@@ -43,34 +43,34 @@ void Game::load(int level)
 
 	if (level < 1)
 	{
-		phases[0] = 7 * 60;
-		phases[1] = 20 * 60;
-		phases[2] = 7 * 60;
-		phases[3] = 20 * 60;
-		phases[4] = 5 * 60;
-		phases[5] = 20 * 60;
-		phases[6] = 5 * 60;
+		phases[0] = 7 * 45;
+		phases[1] = 20 * 45;
+		phases[2] = 7 * 45;
+		phases[3] = 20 * 45;
+		phases[4] = 5 * 45;
+		phases[5] = 20 * 45;
+		phases[6] = 5 * 45;
 		phases[7] = -1;
 	}
 	else if (level < 4)
 	{
-		phases[0] = 7 * 60;
-		phases[1] = 20 * 60;
-		phases[2] = 7 * 60;
-		phases[3] = 20 * 60;
-		phases[4] = 5 * 60;
-		phases[5] = 1033 * 60;
+		phases[0] = 7 * 45;
+		phases[1] = 20 * 45;
+		phases[2] = 7 * 45;
+		phases[3] = 20 * 45;
+		phases[4] = 5 * 45;
+		phases[5] = 1033 * 45;
 		phases[6] = 1;
 		phases[7] = -1;
 	}
 	else
 	{
-		phases[0] = 5 * 60;
-		phases[1] = 20 * 60;
-		phases[2] = 5 * 60;
-		phases[3] = 20 * 60;
-		phases[4] = 5 * 60;
-		phases[5] = 1037 * 60;
+		phases[0] = 5 * 45;
+		phases[1] = 20 * 45;
+		phases[2] = 5 * 45;
+		phases[3] = 20 * 45;
+		phases[4] = 5 * 45;
+		phases[5] = 1037 * 45;
 		phases[6] = 1;
 		phases[7] = -1;
 	}
@@ -118,8 +118,6 @@ void Game::drawGhost(sf::RenderWindow &w)
 void Game::movePac()
 {
 	bool pacAtt = false;
-	int rx = rand() % size.x;
-	int ry = rand() % size.y;
 
 	pac.move(map, size, dots, pacAtt);
 	if (pacAtt)
@@ -141,6 +139,7 @@ void Game::movePac()
 				pac.reset();
 				phase = 0;
 				phaseTimer = phases[phase];
+				printf("Lives: %d\n", lives);
 			}
 		}
 	}
@@ -161,32 +160,6 @@ void Game::movePac()
 				ghost->setMode(0);
 		}
 	}
-
-	ticks++;
-
-	if (failedMap && ticks % std::max(100 - ticks / 100, 1) == 0)
-	{
-		if (map[ry][rx] == 0x20)
-			dots--;
-		map[ry][rx] = 0;
-	}
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num0)) // set ghosts to chase
-		for (auto& ghost : ghosts)
-			ghost->setMode(0);
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1)) // set ghosts to scatter
-		for (auto& ghost : ghosts)
-			ghost->setMode(1);
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2)) // set ghosts to frightened
-		for (auto& ghost : ghosts)
-			ghost->setMode(2);
-
-	if (dots == 0 || sf::Keyboard::isKeyPressed(sf::Keyboard::R)) // reset map
-		over = 1;
-	if (lives == 0)
-		over = 2;
 }
 
 void Game::moveGhosts()
@@ -213,6 +186,43 @@ void Game::moveGhosts()
 			ghost->update(map, size);
 		}
 	}
+}
+
+void Game::update()
+{
+	int rx = rand() % size.x;
+	int ry = rand() % size.y;
+
+	if (restart == 0)
+	{
+		ticks++;
+
+		if (failedMap && ticks % std::max(100 - ticks / 100, 1) == 0)
+		{
+			if (map[ry][rx] == 0x20)
+				dots--;
+			map[ry][rx] = 0;
+		}
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num0)) // set ghosts to chase
+			for (auto& ghost : ghosts)
+				ghost->setMode(0);
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1)) // set ghosts to scatter
+			for (auto& ghost : ghosts)
+				ghost->setMode(1);
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2)) // set ghosts to frightened
+			for (auto& ghost : ghosts)
+				ghost->setMode(2);
+
+		if (dots == 0)
+			over = 1;
+		if (lives == 0 || sf::Keyboard::isKeyPressed(sf::Keyboard::R)) // reset map
+			over = 2;
+	}
+	else
+		restart--;
 }
 
 void Game::setPacDir(char dir)

@@ -81,6 +81,7 @@ void Window::update()
 	game.setPacDir(dir);
 	game.movePac();
 	game.moveGhosts();
+	game.update();
 
 	overState = game.isOver();
 	if (overState)

@@ -47,27 +47,15 @@ protected:
 	bool canMove(char[31][28], int, int);
 
 	sf::RectangleShape rect;
-
 	sf::Vector2f pos, target, scatterPos;
+	sf::Color color;
 
 	float speed = 0.1f;
 
-	char dir = 3;
+	int dotReq, turnCd = 0, restart = 2 * 45;
 
-	char mode = 1;
+	char dir = 3, mode = 1;
 
-	float width = 1.f;
-
-	sf::Color color;
-
-	int dotReq;
-
-	int restart = 45 * 2;
-
-	bool inBox = true;
-
-	int turnCd = 0;
-
-	bool moveEnabled = false;
+	bool inBox = true, moveEnabled = false;
 };
 

@@ -146,7 +146,7 @@ void Ghost::draw(sf::RenderWindow &w, sf::Vector2i size)
 	float yoff = (w.getSize().y - (size.y - 2) * minScale) / 2.f;
 
 	rect.setFillColor((mode == 2 ? sf::Color(0x0000FFFF) : color));
-	rect.setSize(sf::Vector2f(width * minScale, width * minScale));
+	rect.setSize(sf::Vector2f(minScale, minScale));
 	rect.setPosition(xoff + pos.x * minScale, yoff + pos.y * minScale);
 	w.draw(rect);
 }

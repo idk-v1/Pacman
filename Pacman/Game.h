@@ -25,6 +25,8 @@ public:
 
 	void moveGhosts();
 
+	void update();
+
 	void setPacDir(char);
 
 	char isOver(); // 0 = Not done, 1 = Win, 2 = Lose
@@ -34,32 +36,18 @@ private:
 
 	void loadFailedMap();
 
-	char map[31][28] = { 0 };
-
 	sf::VertexArray vertMap;
-
 	sf::Vector2i size = { 28, 31 };
-
-	int lives = 3;
-
-	Pacman pac;
-
 	sf::Texture tex;
-
-	int dots = 0;
-
-	Ghost* ghosts[4];
-
 	sf::Text text;
 
-	char over = 0;
+	Pacman pac;
+	Ghost* ghosts[4];
 
-	bool failedMap = false;
+	int phases[8], restart = 2 * 45, lives = 3, dots = 0, timer = 0, ticks = 0, phaseTimer = 0, phase = 0;
 
-	int timer = 0, ticks = 0, phaseTimer = 0, phase = 0;
+	char map[31][28] = { 0 }, over = 0;
 
-	bool pacAttack = false;
-
-	int phases[4 * 2];
+	bool failedMap = false, pacAttack = false;
 };
 

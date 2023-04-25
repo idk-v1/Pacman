@@ -15,22 +15,14 @@ private:
 	void render();
 
 	sf::RenderWindow w;
-
 	sf::View view;
-
 	sf::Clock clock;
-
-	int lag = 0;
-
-	int dir = -1;
-
-	bool keys[4] = { false };
-
 	sf::Font font;
 
 	Game game;
 
-	int level = 0;
+	int lag = 0, dir = -1, level = 0;
 
+	bool keys[4] = { false };
 };
 
