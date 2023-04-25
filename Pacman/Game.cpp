@@ -1,6 +1,6 @@
 #include "Game.h"
 
-Game::Game(sf::Font &f)
+Game::Game(sf::Font& f)
 {
 	vertMap.setPrimitiveType(sf::Quads);
 	tex.loadFromFile("Res/Textures.png");
@@ -11,6 +11,8 @@ Game::Game(sf::Font &f)
 	ghosts[1] = new PinkGhost();
 	ghosts[2] = new OrangeGhost();
 	ghosts[3] = new BlueGhost();
+
+	rect.setFillColor(sf::Color(0xFFFF00FF));
 }
 
 Game::Game()
@@ -76,6 +78,8 @@ void Game::load(int level)
 	}
 
 	phaseTimer = phases[phase];
+
+	printf("Lives: 3\n");
 }
 
 void Game::drawMap(sf::RenderWindow& w)
@@ -102,6 +106,36 @@ void Game::drawMap(sf::RenderWindow& w)
 			}
 		}
 	w.draw(vertMap, &tex);
+
+	rect.setSize(sf::Vector2f(minScale, minScale));
+	for (int i = 0; i < lives - 1; i++)
+	{
+		rect.setPosition(xoff + (i * 1.5f + 0.5f) * minScale, yoff + (size.y + 0.25f) * minScale);
+		w.draw(rect);
+	}
+
+	debugTarget.setSize(sf::Vector2f(minScale, minScale));
+	debugTarget.setFillColor(sf::Color(0x00000000));
+	debugTarget.setOutlineThickness(4);
+	for (int i = 0; i < 4; i++)
+	{
+		debugTarget.setPosition(xoff + ghosts[i]->getTarget().x * minScale, yoff + ghosts[i]->getTarget().y * minScale);
+		switch (i)
+		{
+		case 0:
+			debugTarget.setOutlineColor(sf::Color(0xFF0000CF));
+			break;
+		case 1:
+			debugTarget.setOutlineColor(sf::Color(0xFF88FFCF));
+			break;
+		case 2:
+			debugTarget.setOutlineColor(sf::Color(0xFF8800CF));
+			break;
+		case 3:
+			debugTarget.setOutlineColor(sf::Color(0x00FFFFCF));
+		}
+		w.draw(debugTarget);
+	}
 }
 
 void Game::drawPac(sf::RenderWindow &w)

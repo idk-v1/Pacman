@@ -40,6 +40,7 @@ private:
 	sf::Vector2i size = { 28, 31 };
 	sf::Texture tex;
 	sf::Text text;
+	sf::RectangleShape rect, debugTarget;
 
 	Pacman pac;
 	Ghost* ghosts[4];

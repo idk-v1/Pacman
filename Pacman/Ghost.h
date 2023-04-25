@@ -25,6 +25,8 @@ public:
 
 	virtual void setTarget(Ghost*, Pacman&);
 
+	sf::Vector2f getTarget();
+
 	virtual void reset(bool);
 
 	void enableMove(bool);

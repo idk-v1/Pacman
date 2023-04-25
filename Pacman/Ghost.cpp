@@ -178,6 +178,11 @@ void Ghost::setTarget(Ghost* red, Pacman& pac)
 	}
 }
 
+sf::Vector2f Ghost::getTarget()
+{
+	return target;
+}
+
 char Ghost::getTile(char map[31][28], int x, int y)
 {
 	if (x < 0 || y < 0 || x >= 28 || y >= 31)

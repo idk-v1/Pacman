@@ -28,8 +28,9 @@ void BlueGhost::setTarget(Ghost* red, Pacman& pac)
 			break;
 		case 3:
 			target = { pac.getPos().x - 2, pac.getPos().y };
-			break;
 		}
+		target.x -= red->getPos().x - pac.getPos().x;
+		target.y -= red->getPos().y - pac.getPos().y;
 		break;
 	case 1:
 		target = scatterPos;
