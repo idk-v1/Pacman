@@ -119,22 +119,25 @@ void Game::drawMap(sf::RenderWindow& w)
 	debugTarget.setOutlineThickness(4);
 	for (int i = 0; i < 4; i++)
 	{
-		debugTarget.setPosition(xoff + ghosts[i]->getTarget().x * minScale, yoff + ghosts[i]->getTarget().y * minScale);
-		switch (i)
+		if (ghosts[i]->getMode != 2)
 		{
-		case 0:
-			debugTarget.setOutlineColor(sf::Color(0xFF0000CF));
-			break;
-		case 1:
-			debugTarget.setOutlineColor(sf::Color(0xFF88FFCF));
-			break;
-		case 2:
-			debugTarget.setOutlineColor(sf::Color(0xFF8800CF));
-			break;
-		case 3:
-			debugTarget.setOutlineColor(sf::Color(0x00FFFFCF));
+			debugTarget.setPosition(xoff + ghosts[i]->getTarget().x * minScale, yoff + ghosts[i]->getTarget().y * minScale);
+			switch (i)
+			{
+			case 0:
+				debugTarget.setOutlineColor(sf::Color(0xFF0000CF));
+				break;
+			case 1:
+				debugTarget.setOutlineColor(sf::Color(0xFF88FFCF));
+				break;
+			case 2:
+				debugTarget.setOutlineColor(sf::Color(0xFF8800CF));
+				break;
+			case 3:
+				debugTarget.setOutlineColor(sf::Color(0x00FFFFCF));
+			}
+			w.draw(debugTarget);
 		}
-		w.draw(debugTarget);
 	}
 }
 
