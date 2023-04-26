@@ -119,7 +119,7 @@ void Game::drawMap(sf::RenderWindow& w)
 	debugTarget.setOutlineThickness(4);
 	for (int i = 0; i < 4; i++)
 	{
-		if (ghosts[i]->getMode != 2)
+		if (ghosts[i]->getMode() != 2)
 		{
 			debugTarget.setPosition(xoff + ghosts[i]->getTarget().x * minScale, yoff + ghosts[i]->getTarget().y * minScale);
 			switch (i)
