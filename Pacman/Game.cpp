@@ -23,7 +23,7 @@ void Game::load(int level)
 {
 	int xpos;
 
-	if (!loadMap("Maps/map0.bin"))
+	if (!loadMap("Res/map.bin"))
 		loadFailedMap();
 
 	// all pacman mazes are symmetrical
