@@ -15,7 +15,7 @@ public:
 
 	void update(char[31][28], sf::Vector2i);
 
-	void draw(sf::RenderWindow&, sf::Vector2i);
+	void draw(sf::RenderWindow&, sf::Vector2i, int);
 
 	sf::Vector2f getPos();
 
@@ -36,6 +36,8 @@ public:
 	int getDotReq();
 
 	bool isInBox();
+
+	void setBlink(bool);
 
 protected:
 	void move(char[31][28], sf::Vector2i);
@@ -58,6 +60,6 @@ protected:
 
 	char dir = 3, mode = 1;
 
-	bool inBox = true, moveEnabled = false;
+	bool inBox = true, moveEnabled = false, blink = false;
 };
 

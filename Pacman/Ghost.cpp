@@ -15,6 +15,11 @@ bool Ghost::isInBox()
 	return inBox;
 }
 
+void Ghost::setBlink(bool val)
+{
+	blink = val;
+}
+
 void Ghost::move(char map[31][28], sf::Vector2i size)
 {
 	switch (dir)
@@ -139,13 +144,24 @@ void Ghost::turn(char map[31][28], sf::Vector2i size)
 		pos.x = std::round(pos.x);
 }
 
-void Ghost::draw(sf::RenderWindow &w, sf::Vector2i size)
+void Ghost::draw(sf::RenderWindow &w, sf::Vector2i size, int timer)
 {
 	float minScale = std::min(w.getSize().x / (float)size.x, w.getSize().y / (float)(size.y + 2 + 3));
 	float xoff = (w.getSize().x - size.x * minScale) / 2.f;
 	float yoff = (w.getSize().y - (size.y - 2) * minScale) / 2.f;
 
-	rect.setFillColor((mode == 2 ? sf::Color(0x0000FFFF) : color));
+	if (mode == 2)
+	{
+		if (timer < 45 * 2.5)
+		{
+			rect.setFillColor((timer / 7 % 2 ? color : sf::Color(0x0000FFFF)));
+		}
+		else
+			rect.setFillColor(sf::Color(0x0000FFFF));
+	}
+	else
+		rect.setFillColor(color);
+
 	rect.setSize(sf::Vector2f(minScale, minScale));
 	rect.setPosition(xoff + pos.x * minScale, yoff + pos.y * minScale);
 	w.draw(rect);

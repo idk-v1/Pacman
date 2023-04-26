@@ -146,7 +146,7 @@ void Game::drawPac(sf::RenderWindow &w)
 void Game::drawGhost(sf::RenderWindow &w)
 {
 	for (auto ghost : ghosts)
-		ghost->draw(w, size);
+		ghost->draw(w, size, timer);
 }
 
 void Game::movePac()
@@ -180,7 +180,7 @@ void Game::movePac()
 
 	if (pacAtt)
 	{
-		timer = 300;
+		timer = 45 * 7;
 		for (auto& ghost : ghosts)
 			ghost->setMode(2);
 	}
