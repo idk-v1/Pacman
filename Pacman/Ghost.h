@@ -27,7 +27,7 @@ public:
 
 	sf::Vector2f getTarget();
 
-	virtual void reset(bool);
+	virtual void reset(sf::Texture&, bool);
 
 	void enableMove(bool);
 
@@ -51,10 +51,12 @@ protected:
 	bool canMove(char[31][28], int, int);
 
 	sf::RectangleShape rect;
+	sf::Texture texture;
 	sf::Vector2f pos, target, scatterPos;
-	sf::Color color;
 
-	float speed = 0.1f;
+	int texXOff;
+
+	float speed = 0.09f;
 
 	int dotReq, turnCd = 0, restart = 2 * 45;
 

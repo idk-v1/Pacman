@@ -1,8 +1,10 @@
 #include "OrangeGhost.h"
 
-OrangeGhost::OrangeGhost()
+OrangeGhost::OrangeGhost(sf::Texture &tex)
 {
-	color = sf::Color(0xFF8800FF);
+	texture = tex;
+	rect.setTexture(&texture);
+	texXOff = 2;
 	pos = { 12, 15 };
 	target = { 13, 11 };
 	scatterPos = { 0, 31 };
@@ -39,9 +41,11 @@ void OrangeGhost::setTarget(Ghost* red, Pacman& pac)
 	}
 }
 
-void OrangeGhost::reset(bool)
+void OrangeGhost::reset(sf::Texture &tex, bool)
 {
-	*this = OrangeGhost();
+	*this = OrangeGhost(tex);
+	texture = tex;
+	rect.setTexture(&texture);
 	if (inBox)
 		this->pos = { 13,15 };
 }

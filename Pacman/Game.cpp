@@ -4,19 +4,31 @@ Game::Game(sf::Font& f)
 {
 	vertMap.setPrimitiveType(sf::Quads);
 	tex.loadFromFile("Res/Textures.png");
+	ghostTex.loadFromFile("Res/Ghost.png");
+	pacTex.loadFromFile("Res/Pacman.png");
 
 	text.setFont(f);
 
-	ghosts[0] = new RedGhost();
-	ghosts[1] = new PinkGhost();
-	ghosts[2] = new OrangeGhost();
-	ghosts[3] = new BlueGhost();
+	ghosts[0] = new RedGhost(ghostTex);
+	ghosts[1] = new PinkGhost(ghostTex);
+	ghosts[2] = new OrangeGhost(ghostTex);
+	ghosts[3] = new BlueGhost(ghostTex);
 
-	rect.setFillColor(sf::Color(0xFFFF00FF));
+	pac = new Pacman(pacTex);
+
+	lifeTex = new sf::Texture;
+	lifeTex->loadFromFile("Res/Pacman.png");
+
+	rect.setTexture(lifeTex);
+	rect.setTextureRect(sf::IntRect(0, 14 * 3, 14, 14));
 }
 
 Game::Game()
 {
+	delete lifeTex;
+	delete pac;
+	for (int i = 0; i < 4; i++)
+		delete ghosts[i];
 }
 
 void Game::load(int level)
@@ -78,8 +90,6 @@ void Game::load(int level)
 	}
 
 	phaseTimer = phases[phase];
-
-	printf("Lives: 3\n");
 }
 
 void Game::drawMap(sf::RenderWindow& w)
@@ -114,7 +124,7 @@ void Game::drawMap(sf::RenderWindow& w)
 		w.draw(rect);
 	}
 
-	debugTarget.setSize(sf::Vector2f(minScale, minScale));
+	/*debugTarget.setSize(sf::Vector2f(minScale, minScale));
 	debugTarget.setFillColor(sf::Color(0x00000000));
 	debugTarget.setOutlineThickness(4);
 	for (int i = 0; i < 4; i++)
@@ -138,12 +148,12 @@ void Game::drawMap(sf::RenderWindow& w)
 			}
 			w.draw(debugTarget);
 		}
-	}
+	}*/
 }
 
 void Game::drawPac(sf::RenderWindow &w)
 {
-	pac.draw(w, size);
+	pac->draw(w, size, ticks);
 }
 
 void Game::drawGhost(sf::RenderWindow &w)
@@ -156,30 +166,9 @@ void Game::movePac()
 {
 	bool pacAtt = false;
 
-	pac.move(map, size, dots, pacAtt);
+	pac->move(map, size, dots, pacAtt);
 	if (pacAtt)
 		pacAttack = true;
-	for (auto& ghost : ghosts)
-	{
-		if (int(pac.getPos().x + 0.49) == int(ghost->getPos().x + 0.49) && int(pac.getPos().y + 0.49) == int(ghost->getPos().y + 0.49))
-		{
-			if (ghost->getMode() == 2)
-			{
-				ghost->reset(true);
-				ghost->setMode(phase % 2 == 0);
-			}
-			else
-			{
-				lives--;
-				for (auto& ghost : ghosts)
-					ghost->reset(false);
-				pac.reset();
-				phase = 0;
-				phaseTimer = phases[phase];
-				printf("Lives: %d\n", lives);
-			}
-		}
-	}
 
 	if (pacAtt)
 	{
@@ -219,7 +208,7 @@ void Game::moveGhosts()
 		{
 			if (ghost->isInBox())
 				ghost->enableMove(true);
-			ghost->setTarget(ghosts[0], pac);
+			ghost->setTarget(ghosts[0], *pac);
 			ghost->update(map, size);
 		}
 	}
@@ -241,30 +230,62 @@ void Game::update()
 			map[ry][rx] = 0;
 		}
 
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num0)) // set ghosts to chase
-			for (auto& ghost : ghosts)
-				ghost->setMode(0);
+		//if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num0)) // set ghosts to chase
+			//for (auto& ghost : ghosts)
+				//ghost->setMode(0);
 
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1)) // set ghosts to scatter
-			for (auto& ghost : ghosts)
-				ghost->setMode(1);
+		//if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1)) // set ghosts to scatter
+			//for (auto& ghost : ghosts)
+				//ghost->setMode(1);
 
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2)) // set ghosts to frightened
-			for (auto& ghost : ghosts)
-				ghost->setMode(2);
+		//if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2)) // set ghosts to frightened
+			//for (auto& ghost : ghosts)
+				//ghost->setMode(2);
 
 		if (dots == 0)
 			over = 1;
-		if (lives == 0 || sf::Keyboard::isKeyPressed(sf::Keyboard::R)) // reset map
+		if (lives == 0) //|| sf::Keyboard::isKeyPressed(sf::Keyboard::R)) // reset map
 			over = 2;
 	}
 	else
 		restart--;
+
+	for (auto& ghost : ghosts)
+	{
+		if (pac->getPos().x + 0.49 < ghost->getPos().x + 1 && pac->getPos().x + 0.49 > ghost->getPos().x)
+			if (pac->getPos().y + 0.49 < ghost->getPos().y + 1 && pac->getPos().y + 0.49 > ghost->getPos().y)
+			{
+				if (ghost->getMode() == 2)
+				{
+					ghost->reset(ghostTex, true);
+					ghost->setMode(phase % 2 == 0);
+				}
+				else
+				{
+					lives--;
+					for (auto& ghost : ghosts)
+						ghost->reset(ghostTex, false);
+					pac->reset(pacTex);
+					phase = 0;
+					phaseTimer = phases[phase];
+				}
+			}
+	}
 }
 
 void Game::setPacDir(char dir)
 {
-	pac.setDir(dir);
+	pac->setDir(dir);
+}
+
+int Game::getLives()
+{
+	return lives;
+}
+
+void Game::setLives(int newLives)
+{
+	lives = newLives;
 }
 
 char Game::isOver() 

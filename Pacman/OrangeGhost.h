@@ -3,10 +3,10 @@
 class OrangeGhost : public Ghost
 {
 public:
-	OrangeGhost();
+	OrangeGhost(sf::Texture&);
 
 	void setTarget(Ghost*, Pacman&);
 
-	void reset(bool);
+	void reset(sf::Texture&, bool);
 };
 

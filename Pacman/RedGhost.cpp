@@ -1,8 +1,10 @@
 #include "RedGhost.h"
 
-RedGhost::RedGhost()
+RedGhost::RedGhost(sf::Texture &tex)
 {
-	color = sf::Color(0xFF0000FF);
+	texture = tex;
+	rect.setTexture(&texture);
+	texXOff = 0;
 	pos = { 13, 11 };
 	target = { 13.5, 23 };
 	scatterPos = { 28, 0 };
@@ -22,9 +24,11 @@ void RedGhost::setTarget(Ghost* red, Pacman& pac)
 	}
 }
 
-void RedGhost::reset(bool inBox)
+void RedGhost::reset(sf::Texture &tex, bool inBox)
 {
-	*this = RedGhost();
+	*this = RedGhost(tex);
+	texture = tex;
+	rect.setTexture(&texture);
 	if (inBox)
 		this->pos = { 13,15 };
 }

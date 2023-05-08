@@ -1,8 +1,10 @@
 #include "PinkGhost.h"
 
-PinkGhost::PinkGhost()
+PinkGhost::PinkGhost(sf::Texture &tex)
 {
-	color = sf::Color(0xFF88FFFF);
+	texture = tex;
+	rect.setTexture(&texture);
+	texXOff = 1;
 	pos = { 13, 15 };
 	target = { 13, 11 };
 	scatterPos = { 0, 0 };
@@ -36,9 +38,11 @@ void PinkGhost::setTarget(Ghost* red, Pacman& pac)
 	}
 }
 
-void PinkGhost::reset(bool)
+void PinkGhost::reset(sf::Texture &tex, bool)
 {
-	*this = PinkGhost();
+	*this = PinkGhost(tex);
+	texture = tex;
+	rect.setTexture(&texture);
 	if (inBox)
 		this->pos = { 13,15 };
 }

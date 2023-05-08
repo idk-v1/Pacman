@@ -3,10 +3,10 @@
 class RedGhost : public Ghost
 {
 public:
-	RedGhost();
+	RedGhost(sf::Texture&);
 
 	void setTarget(Ghost*, Pacman&);
 
-	void reset(bool);
+	void reset(sf::Texture&, bool);
 };
 

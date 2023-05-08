@@ -3,9 +3,9 @@
 class BlueGhost : public Ghost
 {
 public:
-	BlueGhost();
+	BlueGhost(sf::Texture&);
 
 	void setTarget(Ghost*, Pacman&);
 
-	void reset(bool);
+	void reset(sf::Texture&, bool);
 };

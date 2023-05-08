@@ -6,16 +6,17 @@ class Pacman
 {
 public:
 	Pacman();
+	Pacman(sf::Texture&);
 
 	void move(char[31][28], sf::Vector2i, int&, bool&);
 
-	void draw(sf::RenderWindow&, sf::Vector2i);
+	void draw(sf::RenderWindow&, sf::Vector2i, int);
 
 	void setDir(char);
 
 	sf::Vector2f getPos();
 
-	void reset();
+	void reset(sf::Texture&);
 
 	char getDir();
 
@@ -27,7 +28,8 @@ private:
 	bool canMove(char[31][28], int, int);
 
 	sf::RectangleShape rect;
-	sf::Vector2f pos = { 13.5f, 23.f };
+	sf::Texture texture;
+	sf::Vector2f pos = { 13.5f, 23.f }, oldPos = pos;
 
 	float speed = 0.0975f;
 

@@ -1,8 +1,10 @@
 #include "BlueGhost.h"
 
-BlueGhost::BlueGhost()
+BlueGhost::BlueGhost(sf::Texture &tex)
 {
-	color = sf::Color(0x00FFFFFF);
+	texture = tex;
+	rect.setTexture(&texture);
+	texXOff = 3;
 	pos = { 14, 15 };
 	target = { 13, 11 };
 	scatterPos = { 28, 31 };
@@ -37,9 +39,11 @@ void BlueGhost::setTarget(Ghost* red, Pacman& pac)
 	}
 }
 
-void BlueGhost::reset(bool)
+void BlueGhost::reset(sf::Texture &tex, bool)
 {
-	*this = BlueGhost();
+	*this = BlueGhost(tex);
+	texture = tex;
+	rect.setTexture(&texture);
 	if (inBox)
 		this->pos = { 13,15 };
 }

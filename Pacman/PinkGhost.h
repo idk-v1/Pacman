@@ -4,10 +4,10 @@
 class PinkGhost : public Ghost
 {
 public:
-	PinkGhost();
+	PinkGhost(sf::Texture&);
 
 	void setTarget(Ghost*, Pacman&);
 
-	void reset(bool);
+	void reset(sf::Texture&, bool);
 };
 

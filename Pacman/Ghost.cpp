@@ -2,7 +2,6 @@
 
 Ghost::Ghost()
 {
-	color = sf::Color(0xFFFFFFFF);
 	pos = { 13, 11 };
 	target = pos;
 	scatterPos = pos;
@@ -150,20 +149,13 @@ void Ghost::draw(sf::RenderWindow &w, sf::Vector2i size, int timer)
 	float xoff = (w.getSize().x - size.x * minScale) / 2.f;
 	float yoff = (w.getSize().y - (size.y - 2) * minScale) / 2.f;
 
+	rect.setTextureRect(sf::IntRect(texXOff * 14, dir * 14, 14, 14));
 	if (mode == 2)
-	{
-		if (timer < 45 * 2.5)
-		{
-			rect.setFillColor((timer / 7 % 2 ? color : sf::Color(0x0000FFFF)));
-		}
-		else
-			rect.setFillColor(sf::Color(0x0000FFFF));
-	}
-	else
-		rect.setFillColor(color);
+		if (timer > 45 * 2.5 || timer / 7 % 2 == 0)
+			rect.setTextureRect(sf::IntRect(4 * 14, dir * 14, 14, 14));
 
-	rect.setSize(sf::Vector2f(minScale, minScale));
-	rect.setPosition(xoff + pos.x * minScale, yoff + pos.y * minScale);
+	rect.setSize(sf::Vector2f(minScale * 1.5, minScale * 1.5));
+	rect.setPosition(xoff + pos.x * minScale - minScale * 0.25, yoff + pos.y * minScale - minScale * 0.25);
 	w.draw(rect);
 }
 
@@ -227,7 +219,7 @@ bool Ghost::canMove(char map[31][28], int x, int y)
 	}
 }
 
-void Ghost::reset(bool inBox)
+void Ghost::reset(sf::Texture &tex, bool inBox)
 {
 	*this = Ghost();
 	if (inBox)

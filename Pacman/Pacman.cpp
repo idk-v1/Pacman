@@ -1,12 +1,22 @@
 #include "Pacman.h"
 
+
 Pacman::Pacman()
 {
-	rect.setFillColor(sf::Color(0xFFFF00FF));
+
+}
+
+Pacman::Pacman(sf::Texture &tex)
+{
+	texture = tex;
+	rect.setTexture(&texture);
+	rect.setTextureRect(sf::IntRect(2 * 14, dir * 14, 14, 14));
 }
 
 void Pacman::move(char map[31][28], sf::Vector2i size, int &dots, bool &canAttack)
 {
+	oldPos = pos;
+
 	if (restart == 0)
 	{
 		// change direction if able
@@ -87,14 +97,16 @@ void Pacman::move(char map[31][28], sf::Vector2i size, int &dots, bool &canAttac
 		restart--;
 }
 
-void Pacman::draw(sf::RenderWindow &w, sf::Vector2i size)
+void Pacman::draw(sf::RenderWindow &w, sf::Vector2i size, int ticks)
 {
 	float minScale = std::min(w.getSize().x / (float)size.x, w.getSize().y / (float)(size.y + 2 + 3));
 	float xoff = (w.getSize().x - size.x * minScale) / 2.f;
 	float yoff = (w.getSize().y - (size.y - 2) * minScale) / 2.f;
 
-	rect.setSize(sf::Vector2f(minScale, minScale));
-	rect.setPosition(xoff + pos.x * minScale, yoff + pos.y * minScale);
+	if (pos != oldPos)
+		rect.setTextureRect(sf::IntRect(ticks / 4 % 4 * 14, dir * 14, 14, 14));
+	rect.setSize(sf::Vector2f(minScale * 1.5, minScale * 1.5));
+	rect.setPosition(xoff + pos.x * minScale - minScale * 0.25, yoff + pos.y * minScale - minScale * 0.25);
 	w.draw(rect);
 }
 
@@ -135,9 +147,11 @@ bool Pacman::canMove(char map[31][28], int x, int y)
 	}
 }
 
-void Pacman::reset()
+void Pacman::reset(sf::Texture &tex)
 {
-	*this = Pacman();
+	*this = Pacman(tex);
+	texture = tex;
+	rect.setTexture(&texture);
 }
 
 char Pacman::getDir()

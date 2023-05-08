@@ -72,6 +72,7 @@ void Window::start()
 void Window::update()
 {
 	int overState;
+	int lives = game.getLives();
 
 	dir = -1;
 	for (int i = 0; i < 4; i++)
@@ -89,14 +90,11 @@ void Window::update()
 		game = Game(font);
 		if (overState == 1)
 		{
-			printf("You Win!\n");
 			game.load(++level);
+			game.setLives(lives);
 		}
 		else
-		{
-			printf("You Lose!\n");
 			game.load(level);
-		}
 	}
 }
 
