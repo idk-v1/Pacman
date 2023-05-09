@@ -8,7 +8,7 @@ public:
 	Pacman();
 	Pacman(sf::Texture&);
 
-	void move(char[31][28], sf::Vector2i, int&, bool&);
+	void move(char[31][28], sf::Vector2i, int&, bool&, int, int&);
 
 	void draw(sf::RenderWindow&, sf::Vector2i, int);
 
@@ -31,7 +31,7 @@ private:
 	sf::Texture texture;
 	sf::Vector2f pos = { 13.5f, 23.f }, oldPos = pos;
 
-	float speed = 0.0975f;
+	float speed = 0.08f;
 
 	int restart = 45 * 2, dir = 3, nextDir = 3; // 0 = UP, 1 = RIGHT, 2 = DOWN, 3 = LEFT
 };

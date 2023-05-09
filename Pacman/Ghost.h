@@ -13,7 +13,7 @@ class Ghost
 public:
 	Ghost();
 
-	void update(char[31][28], sf::Vector2i);
+	void update(char[31][28], sf::Vector2i, int);
 
 	void draw(sf::RenderWindow&, sf::Vector2i, int);
 
@@ -21,7 +21,7 @@ public:
 
 	void leaveHouse();
 
-	void setMode(char);
+	void setMode(char, int);
 
 	virtual void setTarget(Ghost*, Pacman&);
 
@@ -40,7 +40,7 @@ public:
 	void setBlink(bool);
 
 protected:
-	void move(char[31][28], sf::Vector2i);
+	void move(char[31][28], sf::Vector2i, int);
 
 	void turn(char[31][28], sf::Vector2i);
 
@@ -56,7 +56,7 @@ protected:
 
 	int texXOff;
 
-	float speed = 0.09f;
+	float speed = 0.075f;
 
 	int dotReq, turnCd = 0, restart = 2 * 45;
 

@@ -35,6 +35,10 @@ public:
 
 	char isOver(); // 0 = Not done, 1 = Win, 2 = Lose
 
+	int getScore();
+
+	void setScore(int);
+
 private:
 	bool loadMap(std::string);
 
@@ -49,7 +53,8 @@ private:
 	Pacman* pac;
 	Ghost* ghosts[4];
 
-	int phases[8], restart = 2 * 45, lives = 3, dots = 0, timer = 0, ticks = 0, phaseTimer = 0, phase = 0;
+	int phases[8], restart = 2 * 45, lives = 3, dots = 0, timer = 0, ticks = 0, 
+		phaseTimer = 0, phase = 0, level, score = 0, ghostsEaten = 0;
 
 	char map[31][28] = { 0 }, over = 0;
 

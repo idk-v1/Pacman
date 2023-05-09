@@ -13,8 +13,18 @@ Pacman::Pacman(sf::Texture &tex)
 	rect.setTextureRect(sf::IntRect(2 * 14, dir * 14, 14, 14));
 }
 
-void Pacman::move(char map[31][28], sf::Vector2i size, int &dots, bool &canAttack)
+void Pacman::move(char map[31][28], sf::Vector2i size, int &dots, bool &canAttack, int level, int &score)
 {
+	float speed = this->speed;
+
+	if (level < 1)
+		speed = 0.08;
+	else if (level < 4)
+		speed = 0.09;
+	else if (level < 20)
+		speed = 0.1;
+	else speed = 0.09;
+
 	oldPos = pos;
 
 	if (restart == 0)
@@ -75,11 +85,13 @@ void Pacman::move(char map[31][28], sf::Vector2i size, int &dots, bool &canAttac
 		if (getTile(map, pos.x + 0.49, pos.y + 0.49) == 0x20)
 		{
 			dots--;
+			score += 10;
 			setTile(map, pos.x + 0.49, pos.y + 0.49, 0);
 		}
 		else if (getTile(map, pos.x + 0.49, pos.y + 0.49) == 0x21)
 		{
 			dots--;
+			score += 50;
 			setTile(map, pos.x + 0.49, pos.y + 0.49, 0);
 			canAttack = true;
 		}

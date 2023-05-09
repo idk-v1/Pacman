@@ -19,31 +19,53 @@ void Ghost::setBlink(bool val)
 	blink = val;
 }
 
-void Ghost::move(char map[31][28], sf::Vector2i size)
+void Ghost::move(char map[31][28], sf::Vector2i size, int level)
 {
+	float speed = this->speed;
+
+	if (mode == 2)
+	{
+		if (level < 1)
+			speed = 0.05;
+		else if (level < 4)
+			speed = 0.055;
+		else
+			speed = 0.06;
+	}
+
+	if (getTile(map, pos.x, pos.y + 1) == 0x05 && getTile(map, pos.x, pos.y - 1) == 0x05)
+	{
+		if (level < 1)
+			speed = 0.04;
+		else if (level < 4)
+			speed = 0.045;
+		else
+			speed = 0.05;
+	}
+
 	switch (dir)
 	{
 	case 0:
 		if (canMove(map, pos.x, pos.y - speed))
-			pos.y -= speed * (mode == 2 ? 0.7 : 1);
+			pos.y -= speed;
 		else
 			pos.y = std::round(pos.y);
 		break;
 	case 1:
 		if (canMove(map, pos.x + 0.99 + speed, pos.y))
-			pos.x += speed * (mode == 2 ? 0.7 : 1);
+			pos.x += speed;
 		else
 			pos.x = std::round(pos.x);
 		break;
 	case 2:
 		if (canMove(map, pos.x, pos.y + 0.99 + speed))
-			pos.y += speed * (mode == 2 ? 0.7 : 1);
+			pos.y += speed;
 		else
 			pos.y = std::round(pos.y);
 		break;
 	case 3:
 		if (canMove(map, pos.x - speed, pos.y))
-			pos.x -= speed * (mode == 2 ? 0.7 : 1);
+			pos.x -= speed;
 		else
 			pos.x = std::round(pos.x);
 	}
@@ -58,8 +80,15 @@ void Ghost::move(char map[31][28], sf::Vector2i size)
 		pos.y -= size.y;
 }
 
-void Ghost::update(char map[31][28], sf::Vector2i size)
+void Ghost::update(char map[31][28], sf::Vector2i size, int level)
 {
+	if (level < 1)
+		speed = 0.075f;
+	else if (level < 4)
+		speed = 0.085f;
+	else
+		speed = 0.095f;
+
 	if (restart == 0 && moveEnabled)
 	{
 		if (inBox)
@@ -79,7 +108,7 @@ void Ghost::update(char map[31][28], sf::Vector2i size)
 				turn(map, size);
 			else
 				turnCd--;
-			move(map, size);
+			move(map, size, level);
 		}
 	}
 	else
@@ -169,11 +198,12 @@ void Ghost::leaveHouse()
 	target = { 13, 11 };
 }
 
-void Ghost::setMode(char newMode)
+void Ghost::setMode(char newMode, int level)
 {
 	if (!(mode == 2 && newMode < 2) && newMode != mode)
 		dir = (dir + 2) % 4;
-	mode = newMode;
+	if (level < 20 || newMode != 2)
+		mode = newMode;
 }
 
 void Ghost::setTarget(Ghost* red, Pacman& pac)

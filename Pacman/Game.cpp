@@ -25,15 +25,14 @@ Game::Game(sf::Font& f)
 
 Game::Game()
 {
-	delete lifeTex;
-	delete pac;
-	for (int i = 0; i < 4; i++)
-		delete ghosts[i];
+	
 }
 
 void Game::load(int level)
 {
 	int xpos;
+
+	this->level = level;
 
 	if (!loadMap("Res/map.bin"))
 		loadFailedMap();
@@ -124,7 +123,7 @@ void Game::drawMap(sf::RenderWindow& w)
 		w.draw(rect);
 	}
 
-	/*debugTarget.setSize(sf::Vector2f(minScale, minScale));
+	debugTarget.setSize(sf::Vector2f(minScale, minScale));
 	debugTarget.setFillColor(sf::Color(0x00000000));
 	debugTarget.setOutlineThickness(4);
 	for (int i = 0; i < 4; i++)
@@ -148,7 +147,12 @@ void Game::drawMap(sf::RenderWindow& w)
 			}
 			w.draw(debugTarget);
 		}
-	}*/
+	}
+
+	text.setCharacterSize(minScale);
+	text.setString(std::to_string(score));
+	text.setPosition(xoff + 6 * minScale - text.getLocalBounds().width, yoff - 2 * minScale);
+	w.draw(text);
 }
 
 void Game::drawPac(sf::RenderWindow &w)
@@ -166,7 +170,7 @@ void Game::movePac()
 {
 	bool pacAtt = false;
 
-	pac->move(map, size, dots, pacAtt);
+	pac->move(map, size, dots, pacAtt, level, score);
 	if (pacAtt)
 		pacAttack = true;
 
@@ -174,16 +178,17 @@ void Game::movePac()
 	{
 		timer = 45 * 7;
 		for (auto& ghost : ghosts)
-			ghost->setMode(2);
+			ghost->setMode(2, level);
 	}
 	if (pacAttack)
 	{
 		timer--;
 		if (timer == 0)
 		{
+			ghostsEaten = 0;
 			pacAttack = false;
 			for (auto& ghost : ghosts)
-				ghost->setMode(0);
+				ghost->setMode(0, level);
 		}
 	}
 }
@@ -197,7 +202,7 @@ void Game::moveGhosts()
 			phase++;
 			phaseTimer = phases[phase];
 			for (auto& ghost : ghosts)
-				ghost->setMode(phase % 2 == 0);
+				ghost->setMode(phase % 2 == 0, level);
 		}
 		phaseTimer--;
 	}
@@ -209,7 +214,7 @@ void Game::moveGhosts()
 			if (ghost->isInBox())
 				ghost->enableMove(true);
 			ghost->setTarget(ghosts[0], *pac);
-			ghost->update(map, size);
+			ghost->update(map, size, level);
 		}
 	}
 }
@@ -225,26 +230,14 @@ void Game::update()
 
 		if (failedMap && ticks % std::max(100 - ticks / 100, 1) == 0)
 		{
-			if (map[ry][rx] == 0x20)
+			if (map[ry][rx] == 0x20 || map[ry][rx] == 0x21)
 				dots--;
 			map[ry][rx] = 0;
 		}
 
-		//if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num0)) // set ghosts to chase
-			//for (auto& ghost : ghosts)
-				//ghost->setMode(0);
-
-		//if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1)) // set ghosts to scatter
-			//for (auto& ghost : ghosts)
-				//ghost->setMode(1);
-
-		//if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2)) // set ghosts to frightened
-			//for (auto& ghost : ghosts)
-				//ghost->setMode(2);
-
 		if (dots == 0)
 			over = 1;
-		if (lives == 0) //|| sf::Keyboard::isKeyPressed(sf::Keyboard::R)) // reset map
+		if (lives == 0)
 			over = 2;
 	}
 	else
@@ -257,12 +250,15 @@ void Game::update()
 			{
 				if (ghost->getMode() == 2)
 				{
+					restart = 45;
+					score += 200 * std::pow(2, ghostsEaten++);
 					ghost->reset(ghostTex, true);
-					ghost->setMode(phase % 2 == 0);
+					ghost->setMode(phase % 2 == 0, level);
 				}
 				else
 				{
 					lives--;
+					ghostsEaten = 0;
 					for (auto& ghost : ghosts)
 						ghost->reset(ghostTex, false);
 					pac->reset(pacTex);
@@ -351,4 +347,15 @@ void Game::loadFailedMap()
 	map[23][14] = 0;
 
 	failedMap = true;
+}
+
+
+int Game::getScore()
+{
+	return score;
+}
+
+void Game::setScore(int newScore)
+{
+	score = newScore;
 }

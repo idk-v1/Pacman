@@ -5,6 +5,8 @@ Window::Window(int x, int y)
 	w.create(sf::VideoMode(x * 8, y * 8), "PacMan");
 	w.setFramerateLimit(60);
 
+	font.loadFromFile("Res/emulogic.ttf");
+
 	game = Game(font);
 	game.load(level);
 }
@@ -73,6 +75,7 @@ void Window::update()
 {
 	int overState;
 	int lives = game.getLives();
+	int score = game.getScore();
 
 	dir = -1;
 	for (int i = 0; i < 4; i++)
@@ -92,9 +95,13 @@ void Window::update()
 		{
 			game.load(++level);
 			game.setLives(lives);
+			game.setScore(score);
 		}
 		else
+		{
+			level = 0;
 			game.load(level);
+		}
 	}
 }
 
