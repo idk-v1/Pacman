@@ -29,6 +29,7 @@ void RedGhost::reset(sf::Texture &tex, bool inBox)
 	*this = RedGhost(tex);
 	texture = tex;
 	rect.setTexture(&texture);
+	restart = 45 * 2;
 	if (inBox)
 		this->pos = { 13,15 };
 }

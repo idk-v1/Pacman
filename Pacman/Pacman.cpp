@@ -84,12 +84,14 @@ void Pacman::move(char map[31][28], sf::Vector2i size, int &dots, bool &canAttac
 
 		if (getTile(map, pos.x + 0.49, pos.y + 0.49) == 0x20)
 		{
+			restart = 1;
 			dots--;
 			score += 10;
 			setTile(map, pos.x + 0.49, pos.y + 0.49, 0);
 		}
 		else if (getTile(map, pos.x + 0.49, pos.y + 0.49) == 0x21)
 		{
+			restart = 2;
 			dots--;
 			score += 50;
 			setTile(map, pos.x + 0.49, pos.y + 0.49, 0);
@@ -164,6 +166,7 @@ void Pacman::reset(sf::Texture &tex)
 	*this = Pacman(tex);
 	texture = tex;
 	rect.setTexture(&texture);
+	restart = 45;
 }
 
 char Pacman::getDir()

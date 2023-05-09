@@ -58,7 +58,7 @@ protected:
 
 	float speed = 0.075f;
 
-	int dotReq, turnCd = 0, restart = 2 * 45;
+	int dotReq, turnCd = 0, restart = 0;
 
 	char dir = 3, mode = 1;
 

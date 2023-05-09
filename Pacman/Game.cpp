@@ -34,7 +34,7 @@ void Game::load(int level)
 
 	this->level = level;
 
-	if (!loadMap("Res/map.bin"))
+	if (!loadMap("Res/map.bin") || level > 255)
 		loadFailedMap();
 
 	// all pacman mazes are symmetrical
@@ -170,51 +170,57 @@ void Game::movePac()
 {
 	bool pacAtt = false;
 
-	pac->move(map, size, dots, pacAtt, level, score);
-	if (pacAtt)
-		pacAttack = true;
+	if (restart == 0)
+	{
+		pac->move(map, size, dots, pacAtt, level, score);
+		if (pacAtt)
+			pacAttack = true;
 
-	if (pacAtt)
-	{
-		timer = 45 * 7;
-		for (auto& ghost : ghosts)
-			ghost->setMode(2, level);
-	}
-	if (pacAttack)
-	{
-		timer--;
-		if (timer == 0)
+		if (pacAtt)
 		{
-			ghostsEaten = 0;
-			pacAttack = false;
+			timer = 45 * 7;
 			for (auto& ghost : ghosts)
-				ghost->setMode(0, level);
+				ghost->setMode(2, level);
+		}
+		if (pacAttack)
+		{
+			timer--;
+			if (timer == 0)
+			{
+				ghostsEaten = 0;
+				pacAttack = false;
+				for (auto& ghost : ghosts)
+					ghost->setMode(0, level);
+			}
 		}
 	}
 }
 
 void Game::moveGhosts()
 {
-	if (!pacAttack)
+	if (restart == 0)
 	{
-		if (phaseTimer == 0)
+		if (!pacAttack)
 		{
-			phase++;
-			phaseTimer = phases[phase];
-			for (auto& ghost : ghosts)
-				ghost->setMode(phase % 2 == 0, level);
+			if (phaseTimer == 0)
+			{
+				phase++;
+				phaseTimer = phases[phase];
+				for (auto& ghost : ghosts)
+					ghost->setMode(phase % 2 == 0, level);
+			}
+			phaseTimer--;
 		}
-		phaseTimer--;
-	}
 
-	for (auto& ghost : ghosts)
-	{
-		if (ghost->getDotReq() <= 244 - dots)
+		for (auto& ghost : ghosts)
 		{
-			if (ghost->isInBox())
-				ghost->enableMove(true);
-			ghost->setTarget(ghosts[0], *pac);
-			ghost->update(map, size, level);
+			if (ghost->getDotReq() <= 244 - dots)
+			{
+				if (ghost->isInBox())
+					ghost->enableMove(true);
+				ghost->setTarget(ghosts[0], *pac);
+				ghost->update(map, size, level);
+			}
 		}
 	}
 }
@@ -250,13 +256,14 @@ void Game::update()
 			{
 				if (ghost->getMode() == 2)
 				{
-					restart = 45;
+					restart = 45 / 3 * 2;
 					score += 200 * std::pow(2, ghostsEaten++);
 					ghost->reset(ghostTex, true);
 					ghost->setMode(phase % 2 == 0, level);
 				}
 				else
 				{
+					restart = 45;
 					lives--;
 					ghostsEaten = 0;
 					for (auto& ghost : ghosts)

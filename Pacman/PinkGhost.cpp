@@ -43,6 +43,7 @@ void PinkGhost::reset(sf::Texture &tex, bool)
 	*this = PinkGhost(tex);
 	texture = tex;
 	rect.setTexture(&texture);
+	restart = 45 * 2;
 	if (inBox)
 		this->pos = { 13,15 };
 }

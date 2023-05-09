@@ -33,6 +33,6 @@ private:
 
 	float speed = 0.08f;
 
-	int restart = 45 * 2, dir = 3, nextDir = 3; // 0 = UP, 1 = RIGHT, 2 = DOWN, 3 = LEFT
+	int restart = 0, dir = 3, nextDir = 3; // 0 = UP, 1 = RIGHT, 2 = DOWN, 3 = LEFT
 };
 
