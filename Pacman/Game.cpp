@@ -135,7 +135,7 @@ void Game::drawMap(sf::RenderWindow& w)
 		w.draw(rect);
 	}
 
-	debugTarget.setSize(sf::Vector2f(minScale, minScale));
+	/*debugTarget.setSize(sf::Vector2f(minScale, minScale));
 	debugTarget.setFillColor(sf::Color(0x00000000));
 	debugTarget.setOutlineThickness(4);
 	for (int i = 0; i < 4; i++)
@@ -159,7 +159,7 @@ void Game::drawMap(sf::RenderWindow& w)
 			}
 			w.draw(debugTarget);
 		}
-	}
+	}*/
 
 	text.setCharacterSize(minScale);
 	text.setString(std::to_string(score));

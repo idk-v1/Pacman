@@ -28,15 +28,19 @@ void Window::start()
 				switch (e.key.code)
 				{
 				case sf::Keyboard::W:
+				case sf::Keyboard::Up:
 					keys[0] = true;
 					break;
 				case sf::Keyboard::D:
+				case sf::Keyboard::Right:
 					keys[1] = true;
 					break;
 				case sf::Keyboard::S:
+				case sf::Keyboard::Down:
 					keys[2] = true;
 					break;
 				case sf::Keyboard::A:
+				case sf::Keyboard::Left:
 					keys[3] = true;
 					break;
 				}
@@ -45,15 +49,19 @@ void Window::start()
 				switch (e.key.code)
 				{
 				case sf::Keyboard::W:
+				case sf::Keyboard::Up:
 					keys[0] = false;
 					break;
 				case sf::Keyboard::D:
+				case sf::Keyboard::Right:
 					keys[1] = false;
 					break;
 				case sf::Keyboard::S:
+				case sf::Keyboard::Down:
 					keys[2] = false;
 					break;
 				case sf::Keyboard::A:
+				case sf::Keyboard::Left:
 					keys[3] = false;
 					break;
 				}
