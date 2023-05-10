@@ -46,15 +46,15 @@ private:
 
 	sf::VertexArray vertMap;
 	sf::Vector2i size = { 28, 31 };
-	sf::Texture tex, ghostTex, pacTex, *lifeTex;
+	sf::Texture tex, ghostTex, pacTex, *lifeTex, *fruitTex;
 	sf::Text text;
-	sf::RectangleShape rect, debugTarget;
+	sf::RectangleShape rect, debugTarget, fruitRect;
 
 	Pacman* pac;
 	Ghost* ghosts[4];
 
 	int phases[8], restart = 2 * 45, lives = 3, dots = 0, timer = 0, ticks = 0, 
-		phaseTimer = 0, phase = 0, level, score = 0, ghostsEaten = 0;
+		phaseTimer = 0, phase = 0, level, score = 0, ghostsEaten = 0, fruitTimer = 0, fruit = 0;
 
 	char map[31][28] = { 0 }, over = 0;
 

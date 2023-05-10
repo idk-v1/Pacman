@@ -21,6 +21,11 @@ Game::Game(sf::Font& f)
 
 	rect.setTexture(lifeTex);
 	rect.setTextureRect(sf::IntRect(0, 14 * 3, 14, 14));
+
+	fruitTex = new sf::Texture;
+	fruitTex->loadFromFile("Res/Fruit.png");
+
+	fruitRect.setTexture(fruitTex);
 }
 
 Game::Game()
@@ -151,8 +156,15 @@ void Game::drawMap(sf::RenderWindow& w)
 
 	text.setCharacterSize(minScale);
 	text.setString(std::to_string(score));
-	text.setPosition(xoff + 6 * minScale - text.getLocalBounds().width, yoff - 2 * minScale);
+	text.setPosition(xoff + 9 * minScale - text.getLocalBounds().width, yoff - 2 * minScale);
 	w.draw(text);
+
+	if (fruit % 2)
+	{
+		fruitRect.setPosition(xoff + 13.5 * minScale, yoff + 17 * minScale);
+		fruitRect.setSize(sf::Vector2f(minScale * 1.5, minScale * 1.5));
+		w.draw(fruitRect);
+	}
 }
 
 void Game::drawPac(sf::RenderWindow &w)
@@ -193,6 +205,15 @@ void Game::movePac()
 					ghost->setMode(0, level);
 			}
 		}
+
+		if (pac->getPos().x + 0.49 < 14.5 && pac->getPos().x + 0.49 > 12.5)
+			if (pac->getPos().y + 0.49 < 18 && pac->getPos().y + 0.49 > 16.5)
+				if (fruit % 2)
+				{
+					score += 100;
+					fruitTimer = 0;
+					fruit++;
+				}
 	}
 }
 
@@ -245,6 +266,23 @@ void Game::update()
 			over = 1;
 		if (lives == 0)
 			over = 2;
+
+		if (dots == 244 - 70 && fruit == 0)
+		{
+			fruitTimer = 45 * 10;
+			fruit++;
+		}
+		else if (dots == 244 - 170 && fruit == 2)
+		{
+			fruitTimer = 45 * 10;
+			fruit++;
+		}
+		if (fruitTimer != 0);
+		{
+			fruitTimer--;
+			if (fruitTimer == 0)
+				fruit++;
+		}
 	}
 	else
 		restart--;
@@ -263,6 +301,8 @@ void Game::update()
 				}
 				else
 				{
+					fruit = 0;
+					fruitTimer = 0;
 					restart = 45;
 					lives--;
 					ghostsEaten = 0;
