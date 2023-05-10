@@ -2,6 +2,13 @@
 
 Game::Game(sf::Font& f)
 {
+	file.open("Res/HighScore.txt", std::ios::in);
+	if (file.is_open())
+	{
+		file >> highScore;
+		file.close();
+	}
+
 	vertMap.setPrimitiveType(sf::Quads);
 	tex.loadFromFile("Res/Textures.png");
 	ghostTex.loadFromFile("Res/Ghost.png");
@@ -156,7 +163,20 @@ void Game::drawMap(sf::RenderWindow& w)
 
 	text.setCharacterSize(minScale);
 	text.setString(std::to_string(score));
-	text.setPosition(xoff + 9 * minScale - text.getLocalBounds().width, yoff - 2 * minScale);
+	text.setPosition(xoff + 9 * minScale - text.getLocalBounds().width / 2, yoff - 2 * minScale);
+	w.draw(text);
+
+	text.setCharacterSize(minScale);
+	if (score > highScore)
+		text.setString(std::to_string(score));
+	else
+		text.setString(std::to_string(highScore));
+	text.setPosition(xoff + 18 * minScale - text.getLocalBounds().width / 2, yoff - 2 * minScale);
+	w.draw(text);
+
+	text.setCharacterSize(minScale);
+	text.setString("HIGH SCORE");
+	text.setPosition(xoff + 14 * minScale - text.getLocalBounds().width / 2, yoff - 3 * minScale);
 	w.draw(text);
 
 	if (fruit % 2)
@@ -265,7 +285,15 @@ void Game::update()
 		if (dots == 0)
 			over = 1;
 		if (lives == 0)
+		{
 			over = 2;
+			if (score > highScore)
+			{
+				file.open("Res/HighScore.txt", std::ios::out);
+				file << score;
+				file.close();
+			}
+		}
 
 		if (dots == 244 - 70 && fruit == 0)
 		{
