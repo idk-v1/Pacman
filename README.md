@@ -5,4 +5,4 @@
 ### Useful resources:<br>
 #### https://www.gamedeveloper.com/design/the-pac-man-dossier ([Archive](https://web.archive.org/web/20230412124513/https://www.gamedeveloper.com/design/the-pac-man-dossier))<br>
 
-Use W, A, S, D keys to change Pacman's direction.<br>
+Use WASD or the arrow keys to change Pacman's direction.<br>
