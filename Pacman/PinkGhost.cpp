@@ -36,6 +36,11 @@ void PinkGhost::setTarget(Ghost* red, Pacman& pac)
 	case 1:
 		target = scatterPos;
 	}
+
+	if (dead)
+	{
+		target = { 13.5, 12 };
+	}
 }
 
 void PinkGhost::reset(sf::Texture &tex, bool)

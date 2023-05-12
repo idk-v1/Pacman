@@ -39,6 +39,12 @@ public:
 
 	void setBlink(bool);
 
+	void die();
+
+	bool isDead();
+
+	bool needsRestart();
+
 protected:
 	void move(char[31][28], sf::Vector2i, int);
 
@@ -54,7 +60,7 @@ protected:
 	sf::Texture texture;
 	sf::Vector2f pos, target, scatterPos;
 
-	int texXOff;
+	int texXOff = 0;
 
 	float speed = 0.075f;
 
@@ -62,6 +68,6 @@ protected:
 
 	char dir = 3, mode = 1;
 
-	bool inBox = true, moveEnabled = false, blink = false;
+	bool inBox = true, moveEnabled = false, blink = false, dead = false, requestRestart = false;
 };
 

@@ -37,6 +37,11 @@ void BlueGhost::setTarget(Ghost* red, Pacman& pac)
 	case 1:
 		target = scatterPos;
 	}
+
+	if (dead)
+	{
+		target = { 13.5, 12 };
+	}
 }
 
 void BlueGhost::reset(sf::Texture &tex, bool)

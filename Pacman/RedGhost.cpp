@@ -22,6 +22,11 @@ void RedGhost::setTarget(Ghost* red, Pacman& pac)
 	case 1:
 		target = scatterPos;
 	}
+
+	if (dead)
+	{
+		target = { 13.5, 12 };
+	}
 }
 
 void RedGhost::reset(sf::Texture &tex, bool inBox)

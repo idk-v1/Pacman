@@ -19,6 +19,22 @@ void Ghost::setBlink(bool val)
 	blink = val;
 }
 
+void Ghost::die()
+{
+	dir = (dir + 2) % 4;
+	dead = true;
+}
+
+bool Ghost::isDead()
+{
+	return dead;
+}
+
+bool Ghost::needsRestart()
+{
+	return requestRestart;
+}
+
 void Ghost::move(char map[31][28], sf::Vector2i size, int level)
 {
 	float speed = this->speed;
@@ -42,6 +58,9 @@ void Ghost::move(char map[31][28], sf::Vector2i size, int level)
 		else
 			speed = 0.05;
 	}
+
+	if (dead)
+		speed = 0.15;
 
 	switch (dir)
 	{
@@ -88,6 +107,22 @@ void Ghost::update(char map[31][28], sf::Vector2i size, int level)
 		speed = 0.085f;
 	else
 		speed = 0.095f;
+
+	if (dead)
+	{
+		if (pos.x > 13 && pos.x < 14)
+		{
+			if (pos.y == 11 && moveEnabled)
+				moveEnabled = false;
+			else if (!moveEnabled)
+			{
+				if (pos.y < 14)
+					pos.y += speed;
+				else
+					requestRestart = true;
+			}
+		}
+	}
 
 	if (restart == 0 && moveEnabled)
 	{
@@ -179,9 +214,13 @@ void Ghost::draw(sf::RenderWindow &w, sf::Vector2i size, int timer)
 	float yoff = (w.getSize().y - (size.y - 2) * minScale) / 2.f;
 
 	rect.setTextureRect(sf::IntRect(texXOff * 14, dir * 14, 14, 14));
+
 	if (mode == 2)
 		if (timer > 45 * 2.5 || timer / 7 % 2 == 0)
 			rect.setTextureRect(sf::IntRect(4 * 14, dir * 14, 14, 14));
+
+	if (dead)
+		rect.setTextureRect(sf::IntRect(5 * 14, dir * 14, 14, 14));
 
 	rect.setSize(sf::Vector2f(minScale * 1.5, minScale * 1.5));
 	rect.setPosition(xoff + pos.x * minScale - minScale * 0.25, yoff + pos.y * minScale - minScale * 0.25);

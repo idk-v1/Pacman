@@ -135,7 +135,7 @@ void Game::drawMap(sf::RenderWindow& w)
 		w.draw(rect);
 	}
 
-	/*debugTarget.setSize(sf::Vector2f(minScale, minScale));
+	debugTarget.setSize(sf::Vector2f(minScale, minScale));
 	debugTarget.setFillColor(sf::Color(0x00000000));
 	debugTarget.setOutlineThickness(4);
 	for (int i = 0; i < 4; i++)
@@ -159,7 +159,7 @@ void Game::drawMap(sf::RenderWindow& w)
 			}
 			w.draw(debugTarget);
 		}
-	}*/
+	}
 
 	text.setCharacterSize(minScale);
 	text.setString(std::to_string(score));
@@ -262,6 +262,11 @@ void Game::moveGhosts()
 				ghost->setTarget(ghosts[0], *pac);
 				ghost->update(map, size, level);
 			}
+			if (ghost->needsRestart())
+			{
+				ghost->reset(ghostTex, true);
+				ghost->setMode(phase % 2 == 0, level);
+			}
 		}
 	}
 }
@@ -283,7 +288,9 @@ void Game::update()
 		}
 
 		if (dots == 0)
+		{
 			over = 1;
+		}
 		if (lives == 0)
 		{
 			over = 2;
@@ -317,30 +324,30 @@ void Game::update()
 
 	for (auto& ghost : ghosts)
 	{
-		if (pac->getPos().x + 0.49 < ghost->getPos().x + 1 && pac->getPos().x + 0.49 > ghost->getPos().x)
-			if (pac->getPos().y + 0.49 < ghost->getPos().y + 1 && pac->getPos().y + 0.49 > ghost->getPos().y)
-			{
-				if (ghost->getMode() == 2)
+		if (!ghost->isDead())
+			if (pac->getPos().x + 0.49 < ghost->getPos().x + 1 && pac->getPos().x + 0.49 > ghost->getPos().x)
+				if (pac->getPos().y + 0.49 < ghost->getPos().y + 1 && pac->getPos().y + 0.49 > ghost->getPos().y)
 				{
-					restart = 45 / 3 * 2;
-					score += 200 * std::pow(2, ghostsEaten++);
-					ghost->reset(ghostTex, true);
-					ghost->setMode(phase % 2 == 0, level);
+					if (ghost->getMode() == 2)
+					{
+						restart = 45 / 3 * 2;
+						score += 200 * std::pow(2, ghostsEaten++);
+						ghost->die();
+					}
+					else
+					{
+						fruit = 0;
+						fruitTimer = 0;
+						restart = 45;
+						lives--;
+						ghostsEaten = 0;
+						for (auto& ghost : ghosts)
+							ghost->reset(ghostTex, false);
+						pac->reset(pacTex);
+						phase = 0;
+						phaseTimer = phases[phase];
+					}
 				}
-				else
-				{
-					fruit = 0;
-					fruitTimer = 0;
-					restart = 45;
-					lives--;
-					ghostsEaten = 0;
-					for (auto& ghost : ghosts)
-						ghost->reset(ghostTex, false);
-					pac->reset(pacTex);
-					phase = 0;
-					phaseTimer = phases[phase];
-				}
-			}
 	}
 }
 
