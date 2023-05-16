@@ -157,7 +157,7 @@ void Game::drawMap(sf::RenderWindow& w)
 			case 3:
 				debugTarget.setOutlineColor(sf::Color(0x00FFFFCF));
 			}
-			w.draw(debugTarget);
+			//w.draw(debugTarget);
 		}
 	}
 
@@ -276,10 +276,14 @@ void Game::update()
 	int rx = rand() % size.x;
 	int ry = rand() % size.y;
 
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::K))
+		for (auto& ghost : ghosts)
+			ghost->die();
+
+	ticks++;
+
 	if (restart == 0)
 	{
-		ticks++;
-
 		if (failedMap && ticks % std::max(100 - ticks / 100, 1) == 0)
 		{
 			if (map[ry][rx] == 0x20 || map[ry][rx] == 0x21)
@@ -336,16 +340,22 @@ void Game::update()
 					}
 					else
 					{
-						fruit = 0;
-						fruitTimer = 0;
+						pac->die();
 						restart = 45;
-						lives--;
-						ghostsEaten = 0;
-						for (auto& ghost : ghosts)
-							ghost->reset(ghostTex, false);
-						pac->reset(pacTex);
-						phase = 0;
-						phaseTimer = phases[phase];
+
+						if (pac->needsRestart())
+						{
+							fruit = 0;
+							fruitTimer = 0;
+							restart = 45;
+							lives--;
+							ghostsEaten = 0;
+							for (auto& ghost : ghosts)
+								ghost->reset(ghostTex, false);
+							pac->reset(pacTex);
+							phase = 0;
+							phaseTimer = phases[phase];
+						}
 					}
 				}
 	}

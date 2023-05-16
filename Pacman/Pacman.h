@@ -20,6 +20,10 @@ public:
 
 	char getDir();
 
+	void die();
+
+	bool needsRestart();
+
 private:
 	char getTile(char[31][28], int, int);
 
@@ -33,6 +37,8 @@ private:
 
 	float speed = 0.08f;
 
-	int restart = 0, dir = 3, nextDir = 3; // 0 = UP, 1 = RIGHT, 2 = DOWN, 3 = LEFT
+	int restart = 0, deathAnStart = -1, dir = 3, nextDir = 3; // 0 = UP, 1 = RIGHT, 2 = DOWN, 3 = LEFT
+
+	bool dead = false, requestRestart = false;
 };
 

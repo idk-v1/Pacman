@@ -27,7 +27,7 @@ void Pacman::move(char map[31][28], sf::Vector2i size, int &dots, bool &canAttac
 
 	oldPos = pos;
 
-	if (restart == 0)
+	if (restart == 0 && !dead)
 	{
 		// change direction if able
 		switch (nextDir)
@@ -119,6 +119,20 @@ void Pacman::draw(sf::RenderWindow &w, sf::Vector2i size, int ticks)
 
 	if (pos != oldPos)
 		rect.setTextureRect(sf::IntRect(ticks / 4 % 4 * 14, dir * 14, 14, 14));
+
+	if (dead)
+	{
+		if (deathAnStart == -1)
+			deathAnStart = ticks;
+		if (ticks - deathAnStart >= 40)
+		{
+			requestRestart = true;
+			rect.setTextureRect(sf::IntRect(0, 0, 0, 0));
+		}
+		else
+			rect.setTextureRect(sf::IntRect(14 * 4, (ticks - deathAnStart) / 12 * 14, 14, 14));
+	}
+
 	rect.setSize(sf::Vector2f(minScale * 1.5, minScale * 1.5));
 	rect.setPosition(xoff + pos.x * minScale - minScale * 0.25, yoff + pos.y * minScale - minScale * 0.25);
 	w.draw(rect);
@@ -172,4 +186,14 @@ void Pacman::reset(sf::Texture &tex)
 char Pacman::getDir()
 {
 	return dir;
+}
+
+void Pacman::die()
+{
+	dead = true;
+}
+
+bool Pacman::needsRestart()
+{
+	return requestRestart;
 }

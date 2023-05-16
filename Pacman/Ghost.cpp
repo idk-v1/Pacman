@@ -60,7 +60,7 @@ void Ghost::move(char map[31][28], sf::Vector2i size, int level)
 	}
 
 	if (dead)
-		speed = 0.15;
+		speed = 0.1;
 
 	switch (dir)
 	{
@@ -144,6 +144,15 @@ void Ghost::update(char map[31][28], sf::Vector2i size, int level)
 			else
 				turnCd--;
 			move(map, size, level);
+
+			if (dead)
+			{
+				if (turnCd == 0)
+					turn(map, size);
+				else
+					turnCd--;
+				move(map, size, level);
+			}
 		}
 	}
 	else
@@ -159,7 +168,7 @@ void Ghost::turn(char map[31][28], sf::Vector2i size)
 		if (canMove(map, pos.x, pos.y - speed * 4) && canMove(map, pos.x + 0.9, pos.y - speed * 4))
 		{
 			tmpDist = std::sqrt(std::pow(int(pos.x + 0.49) - target.x, 2) + std::pow(int(pos.y + 0.49 - 1) - target.y, 2));
-			if (tmpDist < dist || randDir * (mode == 2) == 0)
+			if (tmpDist < dist || (!dead && randDir * (mode == 2) == 0))
 			{
 				newDir = 0;
 				dist = tmpDist;
@@ -169,7 +178,7 @@ void Ghost::turn(char map[31][28], sf::Vector2i size)
 		if (canMove(map, pos.x + speed * 4 + 1, pos.y) && canMove(map, pos.x + speed * 4 + 1, pos.y + 0.9))
 		{
 			tmpDist = std::sqrt(std::pow(int(pos.x + 0.49 + 1) - target.x, 2) + std::pow(int(pos.y + 0.49) - target.y, 2));
-			if (tmpDist < dist || randDir * (mode == 2) == 1)
+			if (tmpDist < dist || (!dead && randDir * (mode == 2) == 1))
 			{
 				newDir = 1;
 				dist = tmpDist;
@@ -179,7 +188,7 @@ void Ghost::turn(char map[31][28], sf::Vector2i size)
 		if (canMove(map, pos.x, pos.y + speed * 4 + 1) && canMove(map, pos.x + 0.9, pos.y + speed * 4 + 1))
 		{
 			tmpDist = std::sqrt(std::pow(int(pos.x + 0.49) - target.x, 2) + std::pow(int(pos.y + 0.49 + 1) - target.y, 2));
-			if (tmpDist < dist || randDir * (mode == 2) == 2)
+			if (tmpDist < dist || (!dead && randDir * (mode == 2) == 2))
 			{
 				newDir = 2;
 				dist = tmpDist;
@@ -189,7 +198,7 @@ void Ghost::turn(char map[31][28], sf::Vector2i size)
 		if (canMove(map, pos.x - speed * 4, pos.y) && canMove(map, pos.x - speed * 4, pos.y + 0.9))
 		{
 			tmpDist = std::sqrt(std::pow(int(pos.x + 0.49 - 1) - target.x, 2) + std::pow(int(pos.y + 0.49) - target.y, 2));
-			if (tmpDist < dist || randDir * (mode == 2) == 3)
+			if (tmpDist < dist || (!dead && randDir * (mode == 2) == 3))
 			{
 				newDir = 3;
 				dist = tmpDist;
@@ -216,8 +225,12 @@ void Ghost::draw(sf::RenderWindow &w, sf::Vector2i size, int timer)
 	rect.setTextureRect(sf::IntRect(texXOff * 14, dir * 14, 14, 14));
 
 	if (mode == 2)
+	{
 		if (timer > 45 * 2.5 || timer / 7 % 2 == 0)
-			rect.setTextureRect(sf::IntRect(4 * 14, dir * 14, 14, 14));
+			rect.setTextureRect(sf::IntRect(4 * 14, 14 * 0, 14, 14));
+		else
+			rect.setTextureRect(sf::IntRect(4 * 14, 14 * 1, 14, 14));
+	}
 
 	if (dead)
 		rect.setTextureRect(sf::IntRect(5 * 14, dir * 14, 14, 14));
@@ -240,7 +253,8 @@ void Ghost::leaveHouse()
 void Ghost::setMode(char newMode, int level)
 {
 	if (!(mode == 2 && newMode < 2) && newMode != mode)
-		dir = (dir + 2) % 4;
+		if (!dead)
+			dir = (dir + 2) % 4;
 	if (level < 20 || newMode != 2)
 		mode = newMode;
 }
