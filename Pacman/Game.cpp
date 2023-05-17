@@ -276,9 +276,9 @@ void Game::update()
 	int rx = rand() % size.x;
 	int ry = rand() % size.y;
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::K))
-		for (auto& ghost : ghosts)
-			ghost->die();
+	//if (sf::Keyboard::isKeyPressed(sf::Keyboard::K))
+		//for (auto& ghost : ghosts)
+			//ghost->die();
 
 	ticks++;
 
