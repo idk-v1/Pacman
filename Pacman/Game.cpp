@@ -161,6 +161,7 @@ void Game::drawMap(sf::RenderWindow& w)
 		}
 	}
 
+	text.setFillColor(sf::Color(255, 255, 255));
 	text.setCharacterSize(minScale);
 	text.setString(std::to_string(score));
 	text.setPosition(xoff + 9 * minScale - text.getLocalBounds().width / 2, yoff - 2 * minScale);
@@ -184,6 +185,21 @@ void Game::drawMap(sf::RenderWindow& w)
 		fruitRect.setPosition(xoff + 13.5 * minScale, yoff + 17 * minScale);
 		fruitRect.setSize(sf::Vector2f(minScale * 1.5, minScale * 1.5));
 		w.draw(fruitRect);
+	}
+
+	if (ticks < 80)
+	{
+		text.setFillColor(sf::Color(255, 255, 0));
+		text.setString("READY");
+		text.setPosition(xoff + 13.75 * minScale - text.getLocalBounds().width / 2, yoff + 17 * minScale);
+		w.draw(text);
+	}
+	if (pac->isDead() && lives == 1)
+	{
+		text.setFillColor(sf::Color(255, 255, 0));
+		text.setString("GAME OVER");
+		text.setPosition(xoff + 13.75 * minScale - text.getLocalBounds().width / 2, yoff + 17 * minScale);
+		w.draw(text);
 	}
 }
 

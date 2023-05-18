@@ -24,6 +24,8 @@ public:
 
 	bool needsRestart();
 
+	bool isDead();
+
 private:
 	char getTile(char[31][28], int, int);
 

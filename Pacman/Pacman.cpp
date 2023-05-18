@@ -124,11 +124,10 @@ void Pacman::draw(sf::RenderWindow &w, sf::Vector2i size, int ticks)
 	{
 		if (deathAnStart == -1)
 			deathAnStart = ticks;
-		if (ticks - deathAnStart >= 40)
-		{
+		if (ticks - deathAnStart >= 80)
 			requestRestart = true;
+		if (ticks - deathAnStart >= 40)
 			rect.setTextureRect(sf::IntRect(0, 0, 0, 0));
-		}
 		else
 			rect.setTextureRect(sf::IntRect(14 * 4, (ticks - deathAnStart) / 12 * 14, 14, 14));
 	}
@@ -196,4 +195,9 @@ void Pacman::die()
 bool Pacman::needsRestart()
 {
 	return requestRestart;
+}
+
+bool Pacman::isDead()
+{
+	return dead;
 }
