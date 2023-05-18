@@ -63,4 +63,3 @@ private:
 
 	bool failedMap = false, pacAttack = false;
 };
-

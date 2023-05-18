@@ -70,4 +70,3 @@ protected:
 
 	bool inBox = true, moveEnabled = false, blink = false, dead = false, requestRestart = false;
 };
-

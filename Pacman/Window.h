@@ -25,4 +25,3 @@ private:
 
 	bool keys[4] = { false };
 };
-

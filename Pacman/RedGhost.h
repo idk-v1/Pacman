@@ -9,4 +9,3 @@ public:
 
 	void reset(sf::Texture&, bool);
 };
-
