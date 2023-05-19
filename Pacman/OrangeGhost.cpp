@@ -14,6 +14,8 @@ OrangeGhost::OrangeGhost(sf::Texture &tex)
 
 void OrangeGhost::setTarget(Ghost* red, Pacman& pac)
 {
+	// if orange ghost is more than 8 away from pacman, target pacman
+	// else go to scatter position
 	switch (mode)
 	{
 	case 0:

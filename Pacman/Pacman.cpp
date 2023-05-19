@@ -17,6 +17,7 @@ void Pacman::move(char map[31][28], sf::Vector2i size, int &dots, bool &canAttac
 {
 	float speed = this->speed;
 
+	// change speed based on level
 	if (level < 1)
 		speed = 0.08;
 	else if (level < 4)
@@ -32,23 +33,24 @@ void Pacman::move(char map[31][28], sf::Vector2i size, int &dots, bool &canAttac
 		// change direction if able
 		switch (nextDir)
 		{
-		case 0:
+		case 0: // up
 			if (canMove(map, pos.x, pos.y - speed) && canMove(map, pos.x + 0.9, pos.y - speed))
 				dir = nextDir;
 			break;
-		case 1:
+		case 1: // right
 			if (canMove(map, pos.x + speed + 1, pos.y) && canMove(map, pos.x + speed + 1, pos.y + 0.9))
 				dir = nextDir;
 			break;
-		case 2:
+		case 2: // down
 			if (canMove(map, pos.x, pos.y + speed + 1) && canMove(map, pos.x + 0.9, pos.y + speed + 1))
 				dir = nextDir;
 			break;
-		case 3:
+		case 3: // left
 			if (canMove(map, pos.x - speed, pos.y) && canMove(map, pos.x - speed, pos.y + 0.9))
 				dir = nextDir;
 		}
 
+		// round position to grid
 		if (dir % 2)
 			pos.y = std::round(pos.y);
 		else
@@ -57,25 +59,25 @@ void Pacman::move(char map[31][28], sf::Vector2i size, int &dots, bool &canAttac
 		// move if not colliding
 		switch (dir)
 		{
-		case 0:
+		case 0: // up
 			if (canMove(map, pos.x, pos.y - speed))
 				pos.y -= speed;
 			else
 				pos.y = std::round(pos.y);
 			break;
-		case 1:
+		case 1: // right
 			if (canMove(map, pos.x + 0.99 + speed, pos.y))
 				pos.x += speed;
 			else
 				pos.x = std::round(pos.x);
 			break;
-		case 2:
+		case 2: // down
 			if (canMove(map, pos.x, pos.y + 0.99 + speed))
 				pos.y += speed;
 			else
 				pos.y = std::round(pos.y);
 			break;
-		case 3:
+		case 3: // left
 			if (canMove(map, pos.x - speed, pos.y))
 				pos.x -= speed;
 			else
@@ -98,6 +100,7 @@ void Pacman::move(char map[31][28], sf::Vector2i size, int &dots, bool &canAttac
 			canAttack = true;
 		}
 
+		// teleport to other side
 		if (pos.x < 0)
 			pos.x += size.x;
 		if (pos.y < 0)
@@ -164,10 +167,10 @@ bool Pacman::canMove(char map[31][28], int x, int y)
 {
 	switch (getTile(map, x, y))
 	{
-	case 0x00:
-	case 0x20:
-	case 0x21:
-	case -1:
+	case 0x00: // air
+	case 0x20: // dots
+	case 0x21: // powerups
+	case -1: // unknown
 		return true;
 	default:
 		return false;

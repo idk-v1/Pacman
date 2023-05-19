@@ -14,6 +14,7 @@ PinkGhost::PinkGhost(sf::Texture &tex)
 
 void PinkGhost::setTarget(Ghost* red, Pacman& pac)
 {
+	// targets 4 ahead of pacman
 	switch (mode)
 	{
 	case 0:

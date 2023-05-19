@@ -69,9 +69,9 @@ void Window::start()
 
 
 		lag += clock.restart().asMilliseconds();
-		while (lag >= 1000 / 45)
+		while (lag >= 1000 / 60)
 		{
-			lag -= 1000 / 45;
+			lag -= 1000 / 60;
 
 			update();
 		}
@@ -95,18 +95,21 @@ void Window::update()
 	game.moveGhosts();
 	game.update();
 
+	// reset game
 	overState = game.isOver();
 	if (overState)
 	{
 		game = Game(font);
 		if (overState == 1)
 		{
+			// increase level if player won
 			game.load(++level);
 			game.setLives(lives);
 			game.setScore(score);
 		}
 		else
 		{
+			// go back to the beginning
 			level = 0;
 			game.load(level);
 		}
@@ -117,6 +120,7 @@ void Window::render()
 {
 	w.clear();
 
+	// reset scaling
 	view.reset(sf::FloatRect(0, 0, w.getSize().x, w.getSize().y));
 	w.setView(view);
 

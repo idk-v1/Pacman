@@ -2,6 +2,7 @@
 
 Game::Game(sf::Font& f)
 {
+	// get last highscore
 	file.open("Res/HighScore.txt", std::ios::in);
 	if (file.is_open())
 	{
@@ -46,10 +47,12 @@ void Game::load(int level)
 
 	this->level = level;
 
+	// if the map cannotbe loaded, load the random mode
 	if (!loadMap("Res/map.bin") || level > 255)
 		loadFailedMap();
 
 	// all pacman mazes are symmetrical
+	// set textures of map and mirror them
 	vertMap.resize(size.x * size.y * 4);
 	for (int col = 0; col < size.y; col++)
 		for (int row = 0; row < size.x / 2; row++)
@@ -66,6 +69,7 @@ void Game::load(int level)
 			vertMap[(size.x - 1 - row + col * size.x) * 4 + 3].texCoords = sf::Vector2f(xpos * 8 + 8, 8);
 		}
 
+	// set timings for levels
 	if (level < 1)
 	{
 		phases[0] = 7 * 45;
@@ -135,39 +139,16 @@ void Game::drawMap(sf::RenderWindow& w)
 		w.draw(rect);
 	}
 
-	debugTarget.setSize(sf::Vector2f(minScale, minScale));
-	debugTarget.setFillColor(sf::Color(0x00000000));
-	debugTarget.setOutlineThickness(4);
-	for (int i = 0; i < 4; i++)
-	{
-		if (ghosts[i]->getMode() != 2)
-		{
-			debugTarget.setPosition(xoff + ghosts[i]->getTarget().x * minScale, yoff + ghosts[i]->getTarget().y * minScale);
-			switch (i)
-			{
-			case 0:
-				debugTarget.setOutlineColor(sf::Color(0xFF0000CF));
-				break;
-			case 1:
-				debugTarget.setOutlineColor(sf::Color(0xFF88FFCF));
-				break;
-			case 2:
-				debugTarget.setOutlineColor(sf::Color(0xFF8800CF));
-				break;
-			case 3:
-				debugTarget.setOutlineColor(sf::Color(0x00FFFFCF));
-			}
-			//w.draw(debugTarget);
-		}
-	}
-
+	// current score
 	text.setFillColor(sf::Color(255, 255, 255));
 	text.setCharacterSize(minScale);
 	text.setString(std::to_string(score));
 	text.setPosition(xoff + 9 * minScale - text.getLocalBounds().width / 2, yoff - 2 * minScale);
 	w.draw(text);
 
+	// high score
 	text.setCharacterSize(minScale);
+	// show current score if highscore is less than score
 	if (score > highScore)
 		text.setString(std::to_string(score));
 	else
@@ -180,6 +161,7 @@ void Game::drawMap(sf::RenderWindow& w)
 	text.setPosition(xoff + 14 * minScale - text.getLocalBounds().width / 2, yoff - 3 * minScale);
 	w.draw(text);
 
+	// draw fruit
 	if (fruit % 2)
 	{
 		fruitRect.setPosition(xoff + 13.5 * minScale, yoff + 17 * minScale);
@@ -187,6 +169,7 @@ void Game::drawMap(sf::RenderWindow& w)
 		w.draw(fruitRect);
 	}
 
+	// starting text
 	if (ticks < 80)
 	{
 		text.setFillColor(sf::Color(255, 255, 0));
@@ -194,6 +177,8 @@ void Game::drawMap(sf::RenderWindow& w)
 		text.setPosition(xoff + 13.75 * minScale - text.getLocalBounds().width / 2, yoff + 17 * minScale);
 		w.draw(text);
 	}
+
+	// ending text
 	if (pac->isDead() && lives == 1)
 	{
 		text.setFillColor(sf::Color(255, 255, 0));
@@ -224,6 +209,7 @@ void Game::movePac()
 		if (pacAtt)
 			pacAttack = true;
 
+		// set ghost modes to frightened
 		if (pacAtt)
 		{
 			timer = 45 * 7;
@@ -233,6 +219,7 @@ void Game::movePac()
 		if (pacAttack)
 		{
 			timer--;
+			// end frightened mode
 			if (timer == 0)
 			{
 				ghostsEaten = 0;
@@ -242,6 +229,7 @@ void Game::movePac()
 			}
 		}
 
+		// eat fruit if fruit is visible
 		if (pac->getPos().x + 0.49 < 14.5 && pac->getPos().x + 0.49 > 12.5)
 			if (pac->getPos().y + 0.49 < 18 && pac->getPos().y + 0.49 > 16.5)
 				if (fruit % 2)
@@ -257,6 +245,7 @@ void Game::moveGhosts()
 {
 	if (restart == 0)
 	{
+		// change phases if not frightened
 		if (!pacAttack)
 		{
 			if (phaseTimer == 0)
@@ -271,6 +260,7 @@ void Game::moveGhosts()
 
 		for (auto& ghost : ghosts)
 		{
+			// leave house if dot requirement is met
 			if (ghost->getDotReq() <= 244 - dots)
 			{
 				if (ghost->isInBox())
@@ -278,6 +268,7 @@ void Game::moveGhosts()
 				ghost->setTarget(ghosts[0], *pac);
 				ghost->update(map, size, level);
 			}
+			// reset ghosts with correct mode
 			if (ghost->needsRestart())
 			{
 				ghost->reset(ghostTex, true);
@@ -292,14 +283,11 @@ void Game::update()
 	int rx = rand() % size.x;
 	int ry = rand() % size.y;
 
-	//if (sf::Keyboard::isKeyPressed(sf::Keyboard::K))
-		//for (auto& ghost : ghosts)
-			//ghost->die();
-
 	ticks++;
 
 	if (restart == 0)
 	{
+		// if random mode, slowly destroy the map
 		if (failedMap && ticks % std::max(100 - ticks / 100, 1) == 0)
 		{
 			if (map[ry][rx] == 0x20 || map[ry][rx] == 0x21)
@@ -307,13 +295,16 @@ void Game::update()
 			map[ry][rx] = 0;
 		}
 
+		// win condition
 		if (dots == 0)
 		{
 			over = 1;
 		}
+		// lose condition
 		if (lives == 0)
 		{
 			over = 2;
+			// set new highscore
 			if (score > highScore)
 			{
 				file.open("Res/HighScore.txt", std::ios::out);
@@ -322,6 +313,7 @@ void Game::update()
 			}
 		}
 
+		// timings for fruit to appear
 		if (dots == 244 - 70 && fruit == 0)
 		{
 			fruitTimer = 45 * 10;
@@ -344,16 +336,19 @@ void Game::update()
 
 	for (auto& ghost : ghosts)
 	{
+		// if ghost is not eyes
 		if (!ghost->isDead())
 			if (pac->getPos().x + 0.49 < ghost->getPos().x + 1 && pac->getPos().x + 0.49 > ghost->getPos().x)
 				if (pac->getPos().y + 0.49 < ghost->getPos().y + 1 && pac->getPos().y + 0.49 > ghost->getPos().y)
 				{
+					// ghost is frightened, reset ghost
 					if (ghost->getMode() == 2)
 					{
 						restart = 45 / 3 * 2;
 						score += 200 * std::pow(2, ghostsEaten++);
 						ghost->die();
 					}
+					// pacman is dead, reset after animation
 					else
 					{
 						pac->die();
@@ -451,6 +446,7 @@ void Game::loadFailedMap()
 			if (c == 0x20 || c == 0x21)
 				dots += 2;
 		}
+	// pacman start position
 	map[23][13] = 0;
 	map[23][14] = 0;
 

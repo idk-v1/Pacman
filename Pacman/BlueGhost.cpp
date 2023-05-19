@@ -14,6 +14,8 @@ BlueGhost::BlueGhost(sf::Texture &tex)
 
 void BlueGhost::setTarget(Ghost* red, Pacman& pac)
 {
+	// works together with red to corner pacman
+	// draws line double the length of 2 ahead of pacman to red ghost position
 	switch (mode)
 	{
 	case 0:

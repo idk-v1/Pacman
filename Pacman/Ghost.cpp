@@ -39,6 +39,7 @@ void Ghost::move(char map[31][28], sf::Vector2i size, int level)
 {
 	float speed = this->speed;
 
+	// frightened speed
 	if (mode == 2)
 	{
 		if (level < 1)
@@ -49,6 +50,7 @@ void Ghost::move(char map[31][28], sf::Vector2i size, int level)
 			speed = 0.06;
 	}
 
+	// tunnel speed
 	if (getTile(map, pos.x, pos.y + 1) == 0x05 && getTile(map, pos.x, pos.y - 1) == 0x05)
 	{
 		if (level < 1)
@@ -59,36 +61,38 @@ void Ghost::move(char map[31][28], sf::Vector2i size, int level)
 			speed = 0.05;
 	}
 
+	// eye speed
 	if (dead)
 		speed = 0.1;
 
 	switch (dir)
 	{
-	case 0:
+	case 0: // up
 		if (canMove(map, pos.x, pos.y - speed))
 			pos.y -= speed;
 		else
 			pos.y = std::round(pos.y);
 		break;
-	case 1:
+	case 1: // right
 		if (canMove(map, pos.x + 0.99 + speed, pos.y))
 			pos.x += speed;
 		else
 			pos.x = std::round(pos.x);
 		break;
-	case 2:
+	case 2: // down
 		if (canMove(map, pos.x, pos.y + 0.99 + speed))
 			pos.y += speed;
 		else
 			pos.y = std::round(pos.y);
 		break;
-	case 3:
+	case 3: // left
 		if (canMove(map, pos.x - speed, pos.y))
 			pos.x -= speed;
 		else
 			pos.x = std::round(pos.x);
 	}
 
+	// teleport to other side
 	if (pos.x < 0)
 		pos.x += size.x;
 	if (pos.y < 0)
@@ -101,6 +105,7 @@ void Ghost::move(char map[31][28], sf::Vector2i size, int level)
 
 void Ghost::update(char map[31][28], sf::Vector2i size, int level)
 {
+	// change speed based on level
 	if (level < 1)
 		speed = 0.075f;
 	else if (level < 4)
@@ -108,8 +113,10 @@ void Ghost::update(char map[31][28], sf::Vector2i size, int level)
 	else
 		speed = 0.095f;
 
+	// if ghost is eyes
 	if (dead)
 	{
+		// if ghost is in front of house, start animation to go back
 		if (pos.x > 13 && pos.x < 14)
 		{
 			if (pos.y == 11 && moveEnabled)
@@ -126,6 +133,7 @@ void Ghost::update(char map[31][28], sf::Vector2i size, int level)
 
 	if (restart == 0 && moveEnabled)
 	{
+		// animation to move out of house
 		if (inBox)
 		{
 			if (pos.x < 13)
@@ -139,12 +147,14 @@ void Ghost::update(char map[31][28], sf::Vector2i size, int level)
 		}
 		else
 		{
+			// stops ghosts from doing u-turns
 			if (turnCd == 0)
 				turn(map, size);
 			else
 				turnCd--;
 			move(map, size, level);
 
+			// extra movement speed if ghost is eyes
 			if (dead)
 			{
 				if (turnCd == 0)
@@ -164,7 +174,10 @@ void Ghost::turn(char map[31][28], sf::Vector2i size)
 	float dist = 99999.f, tmpDist = -1;
 	char newDir = -1, randDir = rand() % 4;
 
-	if (dir != 2)
+	// gets distance from target as if they had no collisions
+	// ghosts try to choose the closest path, but smoetimes are tricked
+
+	if (dir != 2) // not down
 		if (canMove(map, pos.x, pos.y - speed * 4) && canMove(map, pos.x + 0.9, pos.y - speed * 4))
 		{
 			tmpDist = std::sqrt(std::pow(int(pos.x + 0.49) - target.x, 2) + std::pow(int(pos.y + 0.49 - 1) - target.y, 2));
@@ -174,7 +187,7 @@ void Ghost::turn(char map[31][28], sf::Vector2i size)
 				dist = tmpDist;
 			}
 		}
-	if (dir != 3)
+	if (dir != 3) // not left
 		if (canMove(map, pos.x + speed * 4 + 1, pos.y) && canMove(map, pos.x + speed * 4 + 1, pos.y + 0.9))
 		{
 			tmpDist = std::sqrt(std::pow(int(pos.x + 0.49 + 1) - target.x, 2) + std::pow(int(pos.y + 0.49) - target.y, 2));
@@ -184,7 +197,7 @@ void Ghost::turn(char map[31][28], sf::Vector2i size)
 				dist = tmpDist;
 			}
 		}
-	if (dir != 0)
+	if (dir != 0) // not up
 		if (canMove(map, pos.x, pos.y + speed * 4 + 1) && canMove(map, pos.x + 0.9, pos.y + speed * 4 + 1))
 		{
 			tmpDist = std::sqrt(std::pow(int(pos.x + 0.49) - target.x, 2) + std::pow(int(pos.y + 0.49 + 1) - target.y, 2));
@@ -194,7 +207,7 @@ void Ghost::turn(char map[31][28], sf::Vector2i size)
 				dist = tmpDist;
 			}
 		}
-	if (dir != 1)
+	if (dir != 1) // not right
 		if (canMove(map, pos.x - speed * 4, pos.y) && canMove(map, pos.x - speed * 4, pos.y + 0.9))
 		{
 			tmpDist = std::sqrt(std::pow(int(pos.x + 0.49 - 1) - target.x, 2) + std::pow(int(pos.y + 0.49) - target.y, 2));
@@ -204,12 +217,16 @@ void Ghost::turn(char map[31][28], sf::Vector2i size)
 				dist = tmpDist;
 			}
 		}
+
+	// if the new direction is different
 	if (dir % 2 != newDir % 2)
 		turnCd = 2;
 
+	// if a new direction is chosen
 	if (newDir != -1)
 		dir = newDir;
 
+	// round position to align with grid
 	if (dir % 2)
 		pos.y = std::round(pos.y);
 	else
@@ -252,6 +269,7 @@ void Ghost::leaveHouse()
 
 void Ghost::setMode(char newMode, int level)
 {
+	// force ghost to change directions when switching modes
 	if (!(mode == 2 && newMode < 2) && newMode != mode)
 		if (!dead)
 			dir = (dir + 2) % 4;
@@ -261,6 +279,7 @@ void Ghost::setMode(char newMode, int level)
 
 void Ghost::setTarget(Ghost* red, Pacman& pac)
 {
+	// different for each ghost type
 	switch (mode)
 	{
 	case 1:
@@ -292,10 +311,10 @@ bool Ghost::canMove(char map[31][28], int x, int y)
 {
 	switch (getTile(map, x, y))
 	{
-	case 0x00:
-	case 0x20:
-	case 0x21:
-	case -1:
+	case 0x00: // air
+	case 0x20: // dots
+	case 0x21: // powerups
+	case -1: // unknown
 		return true;
 	default:
 		return false;

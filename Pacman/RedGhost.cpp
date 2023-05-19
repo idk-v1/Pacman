@@ -14,6 +14,7 @@ RedGhost::RedGhost(sf::Texture &tex)
 
 void RedGhost::setTarget(Ghost* red, Pacman& pac)
 {
+	// targets pacman
 	switch (mode)
 	{
 	case 0:
