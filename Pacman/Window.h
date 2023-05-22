@@ -21,7 +21,7 @@ private:
 
 	Game game;
 
-	int lag = 0, dir = -1, level = 0;
+	int lag = 0, dir = -1, level = 0, ups = 50;
 
 	bool keys[4] = { false };
 };

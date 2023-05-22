@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <vector>
 
 class Pacman
@@ -36,6 +37,9 @@ private:
 	sf::RectangleShape rect;
 	sf::Texture texture;
 	sf::Vector2f pos = { 13.5f, 23.f }, oldPos = pos;
+
+	sf::Sound sound;
+	sf::SoundBuffer chomp, death;
 
 	float speed = 0.08f;
 

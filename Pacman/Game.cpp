@@ -10,6 +10,10 @@ Game::Game(sf::Font& f)
 		file.close();
 	}
 
+	eatGhost.loadFromFile("res/pacman_eatghost.wav");
+	eatFruit.loadFromFile("res/pacman_eatfruit.wav");
+	intro.loadFromFile("res/pacman_beginning.wav");
+
 	vertMap.setPrimitiveType(sf::Quads);
 	tex.loadFromFile("Res/Textures.png");
 	ghostTex.loadFromFile("Res/Ghost.png");
@@ -41,13 +45,16 @@ Game::Game()
 	
 }
 
-void Game::load(int level)
+void Game::load(int level, int ups)
 {
 	int xpos;
 
 	this->level = level;
 
-	// if the map cannotbe loaded, load the random mode
+	restart = 4 * ups;
+	overCount = 4 * ups;
+
+	// if the map cannot be loaded, load the random mode
 	if (!loadMap("Res/map.bin") || level > 255)
 		loadFailedMap();
 
@@ -72,42 +79,45 @@ void Game::load(int level)
 	// set timings for levels
 	if (level < 1)
 	{
-		phases[0] = 7 * 45;
-		phases[1] = 20 * 45;
-		phases[2] = 7 * 45;
-		phases[3] = 20 * 45;
-		phases[4] = 5 * 45;
-		phases[5] = 20 * 45;
-		phases[6] = 5 * 45;
+		phases[0] = 7 * ups;
+		phases[1] = 20 * ups;
+		phases[2] = 7 * ups;
+		phases[3] = 20 * ups;
+		phases[4] = 5 * ups;
+		phases[5] = 20 * ups;
+		phases[6] = 5 * ups;
 		phases[7] = -1;
 	}
 	else if (level < 4)
 	{
-		phases[0] = 7 * 45;
-		phases[1] = 20 * 45;
-		phases[2] = 7 * 45;
-		phases[3] = 20 * 45;
-		phases[4] = 5 * 45;
-		phases[5] = 1033 * 45;
+		phases[0] = 7 * ups;
+		phases[1] = 20 * ups;
+		phases[2] = 7 * ups;
+		phases[3] = 20 * ups;
+		phases[4] = 5 * ups;
+		phases[5] = 1033 * ups;
 		phases[6] = 1;
 		phases[7] = -1;
 	}
 	else
 	{
-		phases[0] = 5 * 45;
-		phases[1] = 20 * 45;
-		phases[2] = 5 * 45;
-		phases[3] = 20 * 45;
-		phases[4] = 5 * 45;
-		phases[5] = 1037 * 45;
+		phases[0] = 5 * ups;
+		phases[1] = 20 * ups;
+		phases[2] = 5 * ups;
+		phases[3] = 20 * ups;
+		phases[4] = 5 * ups;
+		phases[5] = 1037 * ups;
 		phases[6] = 1;
 		phases[7] = -1;
 	}
 
 	phaseTimer = phases[phase];
+
+	sound.setBuffer(intro);
+	sound.play();
 }
 
-void Game::drawMap(sf::RenderWindow& w)
+void Game::drawMap(sf::RenderWindow& w, int ups)
 {
 	float minScale = std::min(w.getSize().x / (float)size.x, w.getSize().y / (float)(size.y + 2 + 3));
 	float xoff = (w.getSize().x - size.x * minScale) / 2.f;
@@ -170,20 +180,20 @@ void Game::drawMap(sf::RenderWindow& w)
 	}
 
 	// starting text
-	if (ticks < 80)
+	if (ticks < 2 * ups || (ticks < 4 * ups && lives == 3) && !ended)
 	{
 		text.setFillColor(sf::Color(255, 255, 0));
-		text.setString("READY");
-		text.setPosition(xoff + 13.75 * minScale - text.getLocalBounds().width / 2, yoff + 17 * minScale);
+		text.setString("READY!");
+		text.setPosition(xoff + 13.8 * minScale - text.getLocalBounds().width / 2, yoff + 17 * minScale);
 		w.draw(text);
 	}
 
 	// ending text
 	if (pac->isDead() && lives == 1)
 	{
-		text.setFillColor(sf::Color(255, 255, 0));
-		text.setString("GAME OVER");
-		text.setPosition(xoff + 13.75 * minScale - text.getLocalBounds().width / 2, yoff + 17 * minScale);
+		text.setFillColor(sf::Color(255, 0, 0));
+		text.setString("GAME   OVER");
+		text.setPosition(xoff + 13.8 * minScale - text.getLocalBounds().width / 2, yoff + 17 * minScale);
 		w.draw(text);
 	}
 }
@@ -199,11 +209,11 @@ void Game::drawGhost(sf::RenderWindow &w)
 		ghost->draw(w, size, timer);
 }
 
-void Game::movePac()
+void Game::movePac(int ups)
 {
 	bool pacAtt = false;
 
-	if (restart == 0)
+	if (restart == 0 && !ended)
 	{
 		pac->move(map, size, dots, pacAtt, level, score);
 		if (pacAtt)
@@ -212,7 +222,7 @@ void Game::movePac()
 		// set ghost modes to frightened
 		if (pacAtt)
 		{
-			timer = 45 * 7;
+			timer = ups * 7;
 			for (auto& ghost : ghosts)
 				ghost->setMode(2, level);
 		}
@@ -234,6 +244,8 @@ void Game::movePac()
 			if (pac->getPos().y + 0.49 < 18 && pac->getPos().y + 0.49 > 16.5)
 				if (fruit % 2)
 				{
+					sound.setBuffer(eatFruit);
+					sound.play();
 					score += 100;
 					fruitTimer = 0;
 					fruit++;
@@ -243,7 +255,7 @@ void Game::movePac()
 
 void Game::moveGhosts()
 {
-	if (restart == 0)
+	if (restart == 0 && !ended)
 	{
 		// change phases if not frightened
 		if (!pacAttack)
@@ -278,7 +290,7 @@ void Game::moveGhosts()
 	}
 }
 
-void Game::update()
+void Game::update(int ups)
 {
 	int rx = rand() % size.x;
 	int ry = rand() % size.y;
@@ -303,25 +315,31 @@ void Game::update()
 		// lose condition
 		if (lives == 0)
 		{
-			over = 2;
-			// set new highscore
-			if (score > highScore)
+			ended = true;
+			if (overCount == 0)
 			{
-				file.open("Res/HighScore.txt", std::ios::out);
-				file << score;
-				file.close();
+				over = 2;
+				// set new highscore
+				if (score > highScore)
+				{
+					file.open("Res/HighScore.txt", std::ios::out);
+					file << score;
+					file.close();
+				}
 			}
+			else
+				overCount--;
 		}
 
 		// timings for fruit to appear
 		if (dots == 244 - 70 && fruit == 0)
 		{
-			fruitTimer = 45 * 10;
+			fruitTimer = ups * 10;
 			fruit++;
 		}
 		else if (dots == 244 - 170 && fruit == 2)
 		{
-			fruitTimer = 45 * 10;
+			fruitTimer = ups * 10;
 			fruit++;
 		}
 		if (fruitTimer != 0);
@@ -344,7 +362,9 @@ void Game::update()
 					// ghost is frightened, reset ghost
 					if (ghost->getMode() == 2)
 					{
-						restart = 45 / 3 * 2;
+						sound.setBuffer(eatGhost);
+						sound.play();
+						restart = ups;
 						score += 200 * std::pow(2, ghostsEaten++);
 						ghost->die();
 					}
@@ -352,20 +372,21 @@ void Game::update()
 					else
 					{
 						pac->die();
-						restart = 45;
+						restart = ups;
 
 						if (pac->needsRestart())
 						{
-							fruit = 0;
-							fruitTimer = 0;
-							restart = 45;
 							lives--;
-							ghostsEaten = 0;
+							ticks = 0;
 							for (auto& ghost : ghosts)
 								ghost->reset(ghostTex, false);
 							pac->reset(pacTex);
+							fruit = 0;
+							fruitTimer = 0;
+							ghostsEaten = 0;
 							phase = 0;
 							phaseTimer = phases[phase];
+							restart = ups;
 						}
 					}
 				}

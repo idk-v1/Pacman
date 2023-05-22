@@ -8,7 +8,7 @@ Window::Window(int x, int y)
 	font.loadFromFile("Res/emulogic.ttf");
 
 	game = Game(font);
-	game.load(level);
+	game.load(level, ups);
 }
 
 void Window::start()
@@ -69,9 +69,9 @@ void Window::start()
 
 
 		lag += clock.restart().asMilliseconds();
-		while (lag >= 1000 / 60)
+		while (lag >= 1000 / ups)
 		{
-			lag -= 1000 / 60;
+			lag -= 1000 / ups;
 
 			update();
 		}
@@ -91,9 +91,9 @@ void Window::update()
 			dir = i;
 
 	game.setPacDir(dir);
-	game.movePac();
+	game.movePac(ups);
 	game.moveGhosts();
-	game.update();
+	game.update(ups);
 
 	// reset game
 	overState = game.isOver();
@@ -103,7 +103,7 @@ void Window::update()
 		if (overState == 1)
 		{
 			// increase level if player won
-			game.load(++level);
+			game.load(++level, ups);
 			game.setLives(lives);
 			game.setScore(score);
 		}
@@ -111,7 +111,7 @@ void Window::update()
 		{
 			// go back to the beginning
 			level = 0;
-			game.load(level);
+			game.load(level, ups);
 		}
 	}
 }
@@ -124,7 +124,7 @@ void Window::render()
 	view.reset(sf::FloatRect(0, 0, w.getSize().x, w.getSize().y));
 	w.setView(view);
 
-	game.drawMap(w);
+	game.drawMap(w, ups);
 
 	game.drawGhost(w);
 

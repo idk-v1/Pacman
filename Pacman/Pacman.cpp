@@ -11,6 +11,9 @@ Pacman::Pacman(sf::Texture &tex)
 	texture = tex;
 	rect.setTexture(&texture);
 	rect.setTextureRect(sf::IntRect(2 * 14, dir * 14, 14, 14));
+
+	chomp.loadFromFile("res/pacman_chomp.wav");
+	death.loadFromFile("res/pacman_death.wav");
 }
 
 void Pacman::move(char map[31][28], sf::Vector2i size, int &dots, bool &canAttack, int level, int &score)
@@ -86,6 +89,8 @@ void Pacman::move(char map[31][28], sf::Vector2i size, int &dots, bool &canAttac
 
 		if (getTile(map, pos.x + 0.49, pos.y + 0.49) == 0x20)
 		{
+			sound.setBuffer(chomp);
+			sound.play();
 			restart = 1;
 			dots--;
 			score += 10;
@@ -93,6 +98,8 @@ void Pacman::move(char map[31][28], sf::Vector2i size, int &dots, bool &canAttac
 		}
 		else if (getTile(map, pos.x + 0.49, pos.y + 0.49) == 0x21)
 		{
+			sound.setBuffer(chomp);
+			sound.play();
 			restart = 2;
 			dots--;
 			score += 50;
@@ -179,6 +186,7 @@ bool Pacman::canMove(char map[31][28], int x, int y)
 
 void Pacman::reset(sf::Texture &tex)
 {
+	sound.stop();
 	*this = Pacman(tex);
 	texture = tex;
 	rect.setTexture(&texture);
@@ -192,6 +200,11 @@ char Pacman::getDir()
 
 void Pacman::die()
 {
+	if (!dead)
+	{
+		sound.setBuffer(death);
+		sound.play();
+	}
 	dead = true;
 }
 
